@@ -1,0 +1,508 @@
+{
+  "id" : 1,
+  "name" : "Name",
+  "description" : "Description",
+  "lastModifiedDate" : "2023-03-27T22:19:11Z",
+  "lastModifiedAgent" : "structurizr-javascript",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlIHsKICAgIG1vZGVsIHsKICAgICAgICBjdXN0b21lciA9IHBlcnNvbiAiQ3VzdG9tZXIiIHsKICAgICAgICAgICAgdGFncyAidXNlciIKICAgICAgICB9CgogICAgICAgIGJhbmsgPSBzb2Z0d2FyZVN5c3RlbSAiQmFuayIKCiAgICAgICAgZGVrb2ZmZWUgPSBzb2Z0d2FyZVN5c3RlbSAiRGVrb2ZmZWUiIHsKCiAgICAgICAgICAgIGRhdGFiYXNlID0gY29udGFpbmVyICJEYXRhYmFzZSIgewogICAgICAgICAgICAgICAgdGFncyAiZGIiCiAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJQb3N0Z3JlU1FMIgogICAgICAgICAgICB9CgogICAgICAgICAgICBpbk1lbW9yeURiID0gY29udGFpbmVyICJJbS1tZW1vcnkgREIiICJDYXNoIGZvciBhY3RpdmUgcGF5bWVudHMiIHsKICAgICAgICAgICAgICAgIHRhZ3MgImRiIgogICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiUmVkaXMiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIG1lc3NhZ2VRdWVyeSA9IGNvbnRhaW5lciAiTWVzc2FnZSBxdWVyeSIgewogICAgICAgICAgICAgICAgdGFncyAiZGIiCiAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJSYWJiaXRNUSIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgcGF5bWVudE1pY3Jvc2VydmljZSA9IGNvbnRhaW5lciAiUGF5bWVudCBtaWNyb3NlcnZpY2UiIHsKICAgICAgICAgICAgICAgIHRhZ3MgImJhY2tlbmQiCiAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJBU1AuTkVUIgogICAgICAgICAgICAgICAgdGhpcyAtPiBkYXRhYmFzZSAiQ1JVRCIKICAgICAgICAgICAgICAgIHRoaXMgLT4gaW5NZW1vcnlEYiAiUmVhZHMgcGF5bWVudHMiCiAgICAgICAgICAgICAgICB0aGlzIC0+IGJhbmsgIkRvZXMgdHJhbnNhY3Rpb25zIgogICAgICAgICAgICAgICAgdGhpcyAtPiBtZXNzYWdlUXVlcnkgIlNheXMgYWJvdXQgcGF5bWVudCBzdGF0dXMgY2hhbmdlcyIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgbWFpbkJhY2tlbmQgPSBjb250YWluZXIgIk1haW4gYmFja2VuZCBtaWNyb2VydmljZSIgewogICAgICAgICAgICAgICAgdGFncyAiYmFja2VuZCIKICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIkFTUC5ORVQiCiAgICAgICAgICAgICAgICB0aGlzIC0+IGRhdGFiYXNlICJDUlVEIgogICAgICAgICAgICAgICAgdGhpcyAtPiBpbk1lbW9yeURiICJDcmVhdGVzIHBheW1lbnRzIgogICAgICAgICAgICAgICAgdGhpcyAtPiBtZXNzYWdlUXVlcnkgIlNheXMgYWJvdXQgb3JkZXIgc3RhdHVzIGNoYW5nZXMiCiAgICAgICAgICAgICAgICBtZXNzYWdlUXVlcnkgLT4gdGhpcyAiQ29uc3VtZXMgcGF5bWVudCBzdGF0dXMgY2hhbmdlcyIKICAgICAgICAgICAgfQogICAgICAgICAgICAKICAgICAgICAgICAgbm90aWZpY2F0aW9uTWljcm9zZXJ2aWNlID0gY29udGFpbmVyICJOb3RpZmljYXRpb24gbWljcm9zZXJ2aWNlIiB7CiAgICAgICAgICAgICAgICB0YWdzICJiYWNrZW5kIgogICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQVNQLk5FVCIKICAgICAgICAgICAgICAgIHRoaXMgLT4gZGF0YWJhc2UgIlJlYWRzIgogICAgICAgICAgICAgICAgbWVzc2FnZVF1ZXJ5IC0+IHRoaXMgIkNvbnN1bWVzIG9yZGVyIHN0YXR1cyBjaGFuZ2VzIgogICAgICAgICAgICB9CgogICAgICAgICAgICB3ZWJBcHBsaWNhdGlvbiA9IGNvbnRhaW5lciAiV2ViIGFwcGxpY2F0aW9uIiB7CiAgICAgICAgICAgICAgICB0YWdzICJmcm9udGVuZCIKICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIlJlYWN0IgogICAgICAgICAgICAgICAgdGhpcyAtPiBtYWluQmFja2VuZCAiTWFrZXMgSFRUUCByZXF1ZXN0cyIKICAgICAgICAgICAgICAgIHRoaXMgLT4gcGF5bWVudE1pY3Jvc2VydmljZSAiTWFrZXMgSFRUUCByZXF1ZXN0cyIKICAgICAgICAgICAgICAgIGN1c3RvbWVyIC0+IHRoaXMgIlVzZXMiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGFuZHJvaWRBcHAgPSBjb250YWluZXIgIkFuZHJvaWQgYXBwbGljYXRpb24iIHsKICAgICAgICAgICAgICAgIHRhZ3MgImZyb250ZW5kIgogICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQW5kcm9pZCIKICAgICAgICAgICAgICAgIHRoaXMgLT4gbWFpbkJhY2tlbmQgIk1ha2VzIEhUVFAgcmVxdWVzdHMiCiAgICAgICAgICAgICAgICB0aGlzIC0+IHBheW1lbnRNaWNyb3NlcnZpY2UgIk1ha2VzIEhUVFAgcmVxdWVzdHMiCiAgICAgICAgICAgICAgICB0aGlzIC0+IG5vdGlmaWNhdGlvbk1pY3Jvc2VydmljZSAiQ29ubmVjdHMiCiAgICAgICAgICAgICAgICBub3RpZmljYXRpb25NaWNyb3NlcnZpY2UgLT4gdGhpcyAiTm90aWZpZXMiCiAgICAgICAgICAgICAgICBjdXN0b21lciAtPiB0aGlzICJVc2VzIgogICAgICAgICAgICB9CgogICAgICAgICAgICBhZG1pbkFwcGxpY2F0aW9uID0gY29udGFpbmVyICJBZG1pbiBhcHBsaWNhdGlvbiIgewogICAgICAgICAgICAgICAgdGFncyAiZnJvbnRlbmQiCiAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJSZWFjdCIKICAgICAgICAgICAgICAgIHRoaXMgLT4gbWFpbkJhY2tlbmQgIk1ha2VzIEhUVFAgcmVxdWVzdHMiCiAgICAgICAgICAgICAgICBjdXN0b21lciAtPiB0aGlzICJVc2VzIgogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3R5bGVzIHsKICAgICAgICAgICAgZWxlbWVudCBiYWNrZW5kIHsKICAgICAgICAgICAgICAgIHNoYXBlIGhleGFnb24KICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzU1NTU1NQogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgZGIgewogICAgICAgICAgICAgICAgc2hhcGUgY3lsaW5kZXIKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzMwQUEzMAogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgZnJvbnRlbmQgewogICAgICAgICAgICAgICAgc2hhcGUgd2ViQnJvd3NlcgogICAgICAgICAgICB9CiAgICAgICAgICAgIAogICAgICAgICAgICBlbGVtZW50IHNpZGUgewogICAgICAgICAgICAgICAgc2hhcGUgYm94CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM3MDcwNzAKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgc3lzdGVtQ29udGV4dCBkZWtvZmZlZSB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgZGVrb2ZmZWUgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgdGhlbWUgZGVmYXVsdAogICAgfQp9Cg=="
+  },
+  "configuration" : { },
+  "model" : {
+    "people" : [ {
+      "id" : "1",
+      "tags" : "Element,Person,user",
+      "properties" : {
+        "structurizr.dsl.identifier" : "customer"
+      },
+      "name" : "Customer",
+      "relationships" : [ {
+        "id" : "34",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "32",
+        "description" : "Uses"
+      }, {
+        "id" : "25",
+        "sourceId" : "1",
+        "destinationId" : "3",
+        "description" : "Uses",
+        "linkedRelationshipId" : "24"
+      }, {
+        "id" : "31",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "26",
+        "description" : "Uses"
+      }, {
+        "id" : "24",
+        "tags" : "Relationship",
+        "sourceId" : "1",
+        "destinationId" : "21",
+        "description" : "Uses"
+      } ],
+      "location" : "Unspecified"
+    } ],
+    "softwareSystems" : [ {
+      "id" : "2",
+      "tags" : "Element,Software System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "bank"
+      },
+      "name" : "Bank",
+      "location" : "Unspecified",
+      "documentation" : { }
+    }, {
+      "id" : "3",
+      "tags" : "Element,Software System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "dekoffee"
+      },
+      "name" : "Dekoffee",
+      "relationships" : [ {
+        "id" : "11",
+        "sourceId" : "3",
+        "destinationId" : "2",
+        "description" : "Does transactions",
+        "linkedRelationshipId" : "10"
+      } ],
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "21",
+        "tags" : "Element,Container,frontend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "webapplication"
+        },
+        "name" : "Web application",
+        "relationships" : [ {
+          "id" : "22",
+          "tags" : "Relationship",
+          "sourceId" : "21",
+          "destinationId" : "13",
+          "description" : "Makes HTTP requests"
+        }, {
+          "id" : "23",
+          "tags" : "Relationship",
+          "sourceId" : "21",
+          "destinationId" : "7",
+          "description" : "Makes HTTP requests"
+        } ],
+        "technology" : "React",
+        "documentation" : { }
+      }, {
+        "id" : "26",
+        "tags" : "Element,Container,frontend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "androidapp"
+        },
+        "name" : "Android application",
+        "relationships" : [ {
+          "id" : "27",
+          "tags" : "Relationship",
+          "sourceId" : "26",
+          "destinationId" : "13",
+          "description" : "Makes HTTP requests"
+        }, {
+          "id" : "29",
+          "tags" : "Relationship",
+          "sourceId" : "26",
+          "destinationId" : "18",
+          "description" : "Connects"
+        }, {
+          "id" : "28",
+          "tags" : "Relationship",
+          "sourceId" : "26",
+          "destinationId" : "7",
+          "description" : "Makes HTTP requests"
+        } ],
+        "technology" : "Android",
+        "documentation" : { }
+      }, {
+        "id" : "5",
+        "tags" : "Element,Container,db",
+        "properties" : {
+          "structurizr.dsl.identifier" : "inmemorydb"
+        },
+        "name" : "Im-memory DB",
+        "description" : "Cash for active payments",
+        "technology" : "Redis",
+        "documentation" : { }
+      }, {
+        "id" : "18",
+        "tags" : "Element,Container,backend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "notificationmicroservice"
+        },
+        "name" : "Notification microservice",
+        "relationships" : [ {
+          "id" : "19",
+          "tags" : "Relationship",
+          "sourceId" : "18",
+          "destinationId" : "4",
+          "description" : "Reads"
+        }, {
+          "id" : "30",
+          "tags" : "Relationship",
+          "sourceId" : "18",
+          "destinationId" : "26",
+          "description" : "Notifies"
+        } ],
+        "technology" : "ASP.NET",
+        "documentation" : { }
+      }, {
+        "id" : "32",
+        "tags" : "Element,Container,frontend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "adminapplication"
+        },
+        "name" : "Admin application",
+        "relationships" : [ {
+          "id" : "33",
+          "tags" : "Relationship",
+          "sourceId" : "32",
+          "destinationId" : "13",
+          "description" : "Makes HTTP requests"
+        } ],
+        "technology" : "React",
+        "documentation" : { }
+      }, {
+        "id" : "6",
+        "tags" : "Element,Container,db",
+        "properties" : {
+          "structurizr.dsl.identifier" : "messagequery"
+        },
+        "name" : "Message query",
+        "relationships" : [ {
+          "id" : "17",
+          "tags" : "Relationship",
+          "sourceId" : "6",
+          "destinationId" : "13",
+          "description" : "Consumes payment status changes"
+        }, {
+          "id" : "20",
+          "tags" : "Relationship",
+          "sourceId" : "6",
+          "destinationId" : "18",
+          "description" : "Consumes order status changes"
+        } ],
+        "technology" : "RabbitMQ",
+        "documentation" : { }
+      }, {
+        "id" : "7",
+        "tags" : "Element,Container,backend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "paymentmicroservice"
+        },
+        "name" : "Payment microservice",
+        "relationships" : [ {
+          "id" : "12",
+          "tags" : "Relationship",
+          "sourceId" : "7",
+          "destinationId" : "6",
+          "description" : "Says about payment status changes"
+        }, {
+          "id" : "8",
+          "tags" : "Relationship",
+          "sourceId" : "7",
+          "destinationId" : "4",
+          "description" : "CRUD"
+        }, {
+          "id" : "9",
+          "tags" : "Relationship",
+          "sourceId" : "7",
+          "destinationId" : "5",
+          "description" : "Reads payments"
+        }, {
+          "id" : "10",
+          "tags" : "Relationship",
+          "sourceId" : "7",
+          "destinationId" : "2",
+          "description" : "Does transactions"
+        } ],
+        "technology" : "ASP.NET",
+        "documentation" : { }
+      }, {
+        "id" : "13",
+        "tags" : "Element,Container,backend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "mainbackend"
+        },
+        "name" : "Main backend microervice",
+        "relationships" : [ {
+          "id" : "15",
+          "tags" : "Relationship",
+          "sourceId" : "13",
+          "destinationId" : "5",
+          "description" : "Creates payments"
+        }, {
+          "id" : "16",
+          "tags" : "Relationship",
+          "sourceId" : "13",
+          "destinationId" : "6",
+          "description" : "Says about order status changes"
+        }, {
+          "id" : "14",
+          "tags" : "Relationship",
+          "sourceId" : "13",
+          "destinationId" : "4",
+          "description" : "CRUD"
+        } ],
+        "technology" : "ASP.NET",
+        "documentation" : { }
+      }, {
+        "id" : "4",
+        "tags" : "Element,Container,db",
+        "properties" : {
+          "structurizr.dsl.identifier" : "database"
+        },
+        "name" : "Database",
+        "technology" : "PostgreSQL",
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    } ]
+  },
+  "documentation" : { },
+  "views" : {
+    "systemContextViews" : [ {
+      "key" : "SystemContext-001",
+      "order" : 1,
+      "softwareSystemId" : "3",
+      "paperSize" : "A5_Landscape",
+      "dimensions" : {
+        "width" : 2316,
+        "height" : 816
+      },
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false
+      },
+      "enterpriseBoundaryVisible" : true,
+      "elements" : [ {
+        "id" : "1",
+        "x" : 208,
+        "y" : 208
+      }, {
+        "id" : "2",
+        "x" : 1658,
+        "y" : 258
+      }, {
+        "id" : "3",
+        "x" : 908,
+        "y" : 258
+      } ],
+      "relationships" : [ {
+        "id" : "25"
+      }, {
+        "id" : "11"
+      } ]
+    } ],
+    "containerViews" : [ {
+      "key" : "Container-001",
+      "order" : 2,
+      "softwareSystemId" : "3",
+      "dimensions" : {
+        "width" : 6070,
+        "height" : 2776
+      },
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false
+      },
+      "externalSoftwareSystemBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "1",
+        "x" : 199,
+        "y" : 1713
+      }, {
+        "id" : "2",
+        "x" : 5399,
+        "y" : 2276
+      }, {
+        "id" : "13",
+        "x" : 1649,
+        "y" : 1151
+      }, {
+        "id" : "4",
+        "x" : 5399,
+        "y" : 1005
+      }, {
+        "id" : "26",
+        "x" : 3899,
+        "y" : 1459
+      }, {
+        "id" : "5",
+        "x" : 5399,
+        "y" : 317
+      }, {
+        "id" : "6",
+        "x" : 2399,
+        "y" : 1151
+      }, {
+        "id" : "7",
+        "x" : 4649,
+        "y" : 1459
+      }, {
+        "id" : "18",
+        "x" : 3149,
+        "y" : 1151
+      }, {
+        "id" : "32",
+        "x" : 899,
+        "y" : 1155
+      }, {
+        "id" : "21",
+        "x" : 899,
+        "y" : 1763
+      } ],
+      "relationships" : [ {
+        "id" : "10",
+        "vertices" : [ {
+          "x" : 5399,
+          "y" : 2247
+        } ]
+      }, {
+        "id" : "20"
+      }, {
+        "id" : "31",
+        "vertices" : [ {
+          "x" : 795,
+          "y" : 2213
+        }, {
+          "x" : 1870,
+          "y" : 2522
+        }, {
+          "x" : 2628,
+          "y" : 2522
+        } ]
+      }, {
+        "id" : "30",
+        "vertices" : [ {
+          "x" : 3699,
+          "y" : 1618
+        } ]
+      }, {
+        "id" : "29",
+        "vertices" : [ {
+          "x" : 3798,
+          "y" : 1335
+        } ]
+      }, {
+        "id" : "17",
+        "vertices" : [ {
+          "x" : 2240,
+          "y" : 1173
+        } ]
+      }, {
+        "id" : "28"
+      }, {
+        "id" : "16",
+        "vertices" : [ {
+          "x" : 2257,
+          "y" : 1472
+        } ]
+      }, {
+        "id" : "27",
+        "vertices" : [ {
+          "x" : 2399,
+          "y" : 1601
+        } ]
+      }, {
+        "id" : "15",
+        "vertices" : [ {
+          "x" : 2399,
+          "y" : 822
+        }, {
+          "x" : 3370,
+          "y" : 230
+        }, {
+          "x" : 4128,
+          "y" : 230
+        } ]
+      }, {
+        "id" : "14",
+        "vertices" : [ {
+          "x" : 2399,
+          "y" : 1001
+        }, {
+          "x" : 3370,
+          "y" : 538
+        }, {
+          "x" : 4128,
+          "y" : 538
+        } ]
+      }, {
+        "id" : "24"
+      }, {
+        "id" : "34"
+      }, {
+        "id" : "12",
+        "vertices" : [ {
+          "x" : 4349,
+          "y" : 1309
+        }, {
+          "x" : 3599,
+          "y" : 1001
+        }, {
+          "x" : 3149,
+          "y" : 1001
+        } ]
+      }, {
+        "id" : "23",
+        "vertices" : [ {
+          "x" : 2620,
+          "y" : 2063
+        }, {
+          "x" : 3378,
+          "y" : 2063
+        }, {
+          "x" : 4349,
+          "y" : 1909
+        } ]
+      }, {
+        "id" : "33"
+      }, {
+        "id" : "22"
+      }, {
+        "id" : "8"
+      }, {
+        "id" : "9"
+      }, {
+        "id" : "19"
+      } ]
+    } ],
+    "configuration" : {
+      "branding" : { },
+      "styles" : {
+        "elements" : [ {
+          "tag" : "backend",
+          "background" : "#555555",
+          "shape" : "Hexagon"
+        }, {
+          "tag" : "db",
+          "background" : "#30aa30",
+          "shape" : "Cylinder"
+        }, {
+          "tag" : "frontend",
+          "shape" : "WebBrowser"
+        }, {
+          "tag" : "side",
+          "background" : "#707070",
+          "shape" : "Box"
+        } ]
+      },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ],
+      "terminology" : { },
+      "metadataSymbols" : "SquareBrackets",
+      "lastSavedView" : "Container-001"
+    }
+  }
+}
