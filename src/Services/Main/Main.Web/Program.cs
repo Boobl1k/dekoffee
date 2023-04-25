@@ -1,4 +1,7 @@
+using Main.Application.Interfaces;
+using Main.Application.Models;
 using Main.Infrastructure;
+using Main.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -11,6 +14,9 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 services.AddAuthorization();
+
+services.AddTransient<ILoginService<User>, LoginService>();
+services.AddTransient<IProductService<Product>, ProductService>();
 
 services.AddCors();
 

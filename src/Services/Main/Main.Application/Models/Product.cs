@@ -10,4 +10,5 @@ public class Product
     public double Gross { get; set; }
     public string? Country { get; set; }
     public double EnergyValue { get; set; }
+    public bool IsBlocked { get; set; }
 }
