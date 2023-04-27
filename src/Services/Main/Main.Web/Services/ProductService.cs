@@ -27,50 +27,16 @@ public class ProductService : IProductService<Product>
         return product;
     }
 
-    public async Task<Product> UpdateProduct(Guid id, Product updatedProduct)
+    public async Task<Product> UpdateProduct(Product product)
     {
-        var product = await GetProduct(id) ?? throw new Exception("No such product");
-
-        product.Title = updatedProduct.Title;
-        product.Price = updatedProduct.Price;
-        product.Description = updatedProduct.Description;
-        product.Net = updatedProduct.Net;
-        product.Gross = updatedProduct.Gross;
-        product.Country = updatedProduct.Country;
-        product.EnergyValue = updatedProduct.EnergyValue;
-        product.IsBlocked = updatedProduct.IsBlocked;
-
         _dbContext.Products.Update(product);
         await _dbContext.SaveChangesAsync();
         return product;
     }
 
-    public async Task DeleteProduct(Guid id)
+    public async Task DeleteProduct(Product product)
     {
-        if (await GetProduct(id) is not { } product)
-            return;
-
         _dbContext.Products.Remove(product);
-        await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task BlockProduct(Guid id)
-    {
-        await ChangeProductAvailability(id, true);
-    }
-
-    public async Task UnblockProduct(Guid id)
-    {
-        await ChangeProductAvailability(id, false);
-    }
-
-    private async Task ChangeProductAvailability(Guid id, bool isBlocked)
-    {
-        if (await GetProduct(id) is not { } product)
-            return;
-
-        product.IsBlocked = isBlocked;
-        _dbContext.Products.Update(product);
         await _dbContext.SaveChangesAsync();
     }
 }

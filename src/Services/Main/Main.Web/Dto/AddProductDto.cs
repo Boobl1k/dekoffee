@@ -1,8 +1,8 @@
-﻿using ServiceStack.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Main.Dto;
 
-public class UpdateProductDto
+public class AddProductDto
 {
     [Required]
     public string Title { get; set; } = null!;
