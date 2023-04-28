@@ -1,6 +1,7 @@
 ﻿using Main.Application.Interfaces;
 using Main.Application.Models;
 using Main.Infrastructure.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Services;
@@ -20,18 +21,20 @@ public class ProductService : IProductService<Product>
     public async Task<Product?> GetProduct(Guid id) =>
         await _dbContext.Products.FirstOrDefaultAsync(product => product.Id == id);
 
-    public async Task<Product> CreateProduct(Product product)
+    public async Task<Product?> CreateProduct(Product product)
     {
         _dbContext.Products.Add(product);
         await _dbContext.SaveChangesAsync();
-        return product;
+
+        return await GetProduct(product.Id);
     }
 
     public async Task<Product> UpdateProduct(Product product)
     {
         _dbContext.Products.Update(product);
         await _dbContext.SaveChangesAsync();
-        return product;
+
+        return (await GetProduct(product.Id))!;
     }
 
     public async Task DeleteProduct(Product product)

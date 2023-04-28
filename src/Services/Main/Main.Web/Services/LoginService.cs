@@ -34,6 +34,9 @@ public class LoginService : ILoginService<User>
 
     public async Task<User?> FindByEmail(string? email) =>
         await _userManager.FindByEmailAsync(email ?? throw new Exception("Email not provided"));
+    
+    public async Task<User?> FindById(Guid id) =>
+        await _userManager.FindByIdAsync(id.ToString());
 
     public async Task<User?> GetCurrentUser()
     {

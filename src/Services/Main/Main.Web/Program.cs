@@ -17,6 +17,8 @@ services.AddAuthorization();
 
 services.AddTransient<ILoginService<User>, LoginService>();
 services.AddTransient<IProductService<Product>, ProductService>();
+services.AddTransient<ICartService, CartService>();
+services.AddTransient<IProfileService<User>, ProfileService>();
 
 services.AddCors();
 

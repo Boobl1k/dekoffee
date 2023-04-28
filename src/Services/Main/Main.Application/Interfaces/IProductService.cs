@@ -4,7 +4,7 @@ public interface IProductService<TEntity> where TEntity : class
 {
     Task<IEnumerable<TEntity>> GetProducts();
     Task<TEntity?> GetProduct(Guid id);
-    Task<TEntity> CreateProduct(TEntity product);
-    Task<TEntity> UpdateProduct(TEntity product);
-    Task DeleteProduct(TEntity product);
+    Task<TEntity?> CreateProduct(TEntity entity);
+    Task<TEntity> UpdateProduct(TEntity entity);
+    Task DeleteProduct(TEntity entity);
 }

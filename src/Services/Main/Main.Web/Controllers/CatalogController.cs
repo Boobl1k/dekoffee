@@ -44,8 +44,9 @@ public class CatalogController : ControllerBase
             EnergyValue = productDto.EnergyValue,
             IsBlocked = productDto.IsBlocked
         };
-        var result = await _productService.CreateProduct(product);
-
+        if (await _productService.CreateProduct(product) is not { } result)
+            throw new Exception("Product is not created");
+        
         return Ok(result);
     }
 

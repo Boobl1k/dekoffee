@@ -18,13 +18,15 @@ public class AuthController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly ILoginService<User> _loginService;
+    private readonly ICartService _cartService;
 
     public AuthController(UserManager<User> userManager, SignInManager<User> signInManager,
-        ILoginService<User> loginService)
+        ILoginService<User> loginService, ICartService cartService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _loginService = loginService;
+        _cartService = cartService;
     }
 
     [HttpPost("Register")]
@@ -32,8 +34,11 @@ public class AuthController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
+        var guid = Guid.NewGuid();
+
         var user = new User
         {
+            Id = guid,
             UserName = registerUserDto.Username,
             Email = registerUserDto.Email
         };
@@ -46,10 +51,15 @@ public class AuthController : ControllerBase
 
         var result = await _userManager.CreateAsync(user, registerUserDto.Password);
         Console.WriteLine(result.Errors.FirstOrDefault()?.Description);
-        return result.Succeeded
-            ? Ok()
-            : Forbid(new AuthenticationProperties(result.Errors.ToDictionary(error => error.Code,
+
+        if (!result.Succeeded)
+            return Forbid(new AuthenticationProperties(result.Errors.ToDictionary(error => error.Code,
                 error => error.Description)!));
+
+        if (await _cartService.CreateCart(new Cart { Id = guid }) is null)
+            throw new Exception("Cart is not created");
+        
+        return Ok();
     }
 
     [HttpPost("Logout")]
