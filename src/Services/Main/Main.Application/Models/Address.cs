@@ -8,4 +8,6 @@ public class Address
     public string House { get; set; } = null!;
     public string Apartment { get; set; } = null!;
     public string Commentary { get; set; } = null!;
+
+    public User User { get; set; } = null!;
 }

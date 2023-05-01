@@ -7,7 +7,7 @@ namespace Main.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CatalogController : ControllerBase
+public class CatalogController : CustomControllerBase
 {
     private readonly IProductService<Product> _productService;
 
@@ -17,15 +17,17 @@ public class CatalogController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<Product>> GetProducts()
+    public async Task<IActionResult> GetProducts()
     {
-        return (await _productService.GetProducts()).ToList();
+        return Ok((await _productService.GetProducts()).ToList());
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetProduct([FromQuery] Guid id)
     {
-        return await _productService.GetProduct(id) is not { } product ? BadRequest() : Ok(product);
+        return await _productService.GetProduct(id) is not { } product
+            ? BadRequestInvalidObject(nameof(Product))
+            : Ok(product);
     }
 
     [HttpPost]
@@ -46,7 +48,7 @@ public class CatalogController : ControllerBase
         };
         if (await _productService.CreateProduct(product) is not { } result)
             throw new Exception("Product is not created");
-        
+
         return Ok(result);
     }
 
@@ -56,7 +58,7 @@ public class CatalogController : ControllerBase
         if (!ModelState.IsValid) return BadRequest();
 
         if (await _productService.GetProduct(id) is not { } product)
-            return BadRequest();
+            return BadRequestInvalidObject(nameof(Product));
 
         product.Title = productDto.Title;
         product.Price = productDto.Price;

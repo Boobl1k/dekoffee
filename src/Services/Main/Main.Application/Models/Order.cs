@@ -6,7 +6,8 @@ public enum OrderStatus
     Processing,
     InCooking,
     InDelivery,
-    Completed
+    Completed,
+    Canceled
 }
 
 public class Order

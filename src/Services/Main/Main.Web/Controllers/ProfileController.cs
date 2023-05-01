@@ -6,23 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace Main.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class ProfileController : ControllerBase
+[Route("[controller]"), OpenIdDictAuthorize]
+public class ProfileController : CustomControllerBase
 {
     private readonly IProfileService<User> _profileService;
-    private readonly ILoginService<User> _loginService;
+    private readonly IUserService<User> _userService;
 
-    public ProfileController(IProfileService<User> profileService, ILoginService<User> loginService)
+    public ProfileController(IProfileService<User> profileService, IUserService<User> userService)
     {
         _profileService = profileService;
-        _loginService = loginService;
+        _userService = userService;
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Get(Guid id)
+    [HttpGet]
+    public async Task<IActionResult> Get()
     {
-        if (await _loginService.FindById(id) is not { } user)
-            return BadRequest();
+        if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
+            return ForbidUnauthorizedClient();
 
         var profileDto = new ProfileDto
         {
@@ -34,12 +34,12 @@ public class ProfileController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateProfile(Guid id, [FromBody] UpdateProfileDto profileDto)
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto profileDto)
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        if (await _loginService.FindById(id) is not { } user)
-            return BadRequest();
+        if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
+            return ForbidUnauthorizedClient();
 
         user.UserName = profileDto.Username;
         user.Email = profileDto.Email;

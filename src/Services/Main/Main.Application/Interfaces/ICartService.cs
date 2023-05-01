@@ -4,10 +4,16 @@ namespace Main.Application.Interfaces;
 
 public interface ICartService
 {
-    Task<Cart?> GetCart(Guid id);
-    Task<Cart?> GetCartWithProducts(Guid id);
     Task<Cart?> CreateCart(Cart cart);
-    Task<Product?> AddProductToCart(Guid id, Product product);
-    Task RemoveProductFromCart(Guid id, int productIndex);
+    Task<Product?> AddProductToCart(Guid userId, Product product);
+    Task RemoveProductFromCart(Guid id, int index);
     Task ClearCart(Guid id);
+    ICartBuilder CreateCartBuilder();
+}
+
+public interface ICartBuilder
+{
+    ICartBuilder WithUser();
+    ICartBuilder WithProducts();
+    Task<Cart?> GetCart(Guid id);
 }

@@ -2,21 +2,23 @@
 using Main.Application.Interfaces;
 using Main.Application.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using OpenIddict.Abstractions;
 
 namespace Main.Services;
 
-public class LoginService : ILoginService<User>
+public class UserService : IUserService<User>, IUserBuilder<User>
 {
-    private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private IQueryable<User> _query;
 
-    public LoginService(UserManager<User> userManager, SignInManager<User> signInManager,
+    public UserService(UserManager<User> userManager, SignInManager<User> signInManager,
         IHttpContextAccessor httpContextAccessor)
     {
-        _userManager = userManager;
         _signInManager = signInManager;
         _httpContextAccessor = httpContextAccessor;
+        _query = userManager.Users;
     }
 
     public async Task<bool> ValidateCredentials(string? email, string? password = null, bool checkPassword = false)
@@ -33,14 +35,23 @@ public class LoginService : ILoginService<User>
     }
 
     public async Task<User?> FindByEmail(string? email) =>
-        await _userManager.FindByEmailAsync(email ?? throw new Exception("Email not provided"));
-    
+        await _query.FirstOrDefaultAsync(u => u.Email == email);
+
     public async Task<User?> FindById(Guid id) =>
-        await _userManager.FindByIdAsync(id.ToString());
+        await _query.FirstOrDefaultAsync(u => u.Id == id);
 
     public async Task<User?> GetCurrentUser()
     {
         var user = _httpContextAccessor.HttpContext?.User ?? throw new Exception("Not logged in");
-        return await FindByEmail(user.FindFirstValue(ClaimTypes.Email));
+        return await FindByEmail(user.FindFirstValue(OpenIddictConstants.Claims.Email) ??
+                                 throw new Exception("Not logged in"));
+    }
+
+    public IUserBuilder<User> CreateUserBuilder() => this;
+
+    public IUserBuilder<User> WithAddresses()
+    {
+        _query = _query.Include(u => u.Addresses);
+        return this;
     }
 }

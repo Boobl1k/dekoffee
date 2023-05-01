@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using OpenIddict.Abstractions;
 using Polly;
 
 namespace Main.Infrastructure;
@@ -40,6 +42,38 @@ public static class InfrastructureDependencies
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
+            options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
+            options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Username;
+        });
+
+        services.AddOpenIddict()
+            .AddCore(options =>
+                options.UseEntityFrameworkCore()
+                    .UseDbContext<AppDbContext>())
+            .AddServer(options =>
+            {
+                options
+                    .AcceptAnonymousClients()
+                    .AllowPasswordFlow()
+                    .AllowRefreshTokenFlow();
+                options.SetTokenEndpointUris("/Auth/Login");
+                var cfg = options.UseAspNetCore();
+                if (builder.Environment.IsDevelopment())
+                    cfg.DisableTransportSecurityRequirement();
+                cfg.EnableTokenEndpointPassthrough();
+                options
+                    .AddDevelopmentEncryptionCertificate()
+                    .AddDevelopmentSigningCertificate();
+            })
+            .AddValidation(options =>
+            {
+                options.UseAspNetCore();
+                options.UseLocalServer();
+            });
     }
 
     public static async Task ConfigureMigrations(WebApplication app)

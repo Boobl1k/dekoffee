@@ -17,15 +17,15 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly ILoginService<User> _loginService;
+    private readonly IUserService<User> _userService;
     private readonly ICartService _cartService;
 
     public AuthController(UserManager<User> userManager, SignInManager<User> signInManager,
-        ILoginService<User> loginService, ICartService cartService)
+        IUserService<User> userService, ICartService cartService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _loginService = loginService;
+        _userService = userService;
         _cartService = cartService;
     }
 
@@ -43,7 +43,7 @@ public class AuthController : ControllerBase
             Email = registerUserDto.Email
         };
 
-        if (await _loginService.ValidateCredentials(registerUserDto.Email, checkPassword: false))
+        if (await _userService.ValidateCredentials(registerUserDto.Email, checkPassword: false))
             return BadRequest("User with same Email already exists");
 
         if (registerUserDto.Password != registerUserDto.RepeatPassword)
@@ -58,7 +58,7 @@ public class AuthController : ControllerBase
 
         if (await _cartService.CreateCart(new Cart { Id = guid }) is null)
             throw new Exception("Cart is not created");
-        
+
         return Ok();
     }
 
@@ -75,7 +75,7 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid) return BadRequest();
         var request = HttpContext.GetOpenIddictServerRequest() ?? throw new Exception("OpenIdDict config is wrong");
 
-        if (await _loginService.ValidateCredentials(userDto.Email, userDto.Password))
+        if (!await _userService.ValidateCredentials(userDto.Email, userDto.Password, true))
             return Forbid(new AuthenticationProperties(new Dictionary<string, string?>
             {
                 [OpenIddictServerAspNetCoreConstants.Properties.Error] = OpenIddictConstants.Errors.InvalidGrant,
@@ -84,7 +84,8 @@ public class AuthController : ControllerBase
             }), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
         var userPrincipal =
-            await _signInManager.CreateUserPrincipalAsync((await _loginService.FindByEmail(userDto.Email))!);
+            await _signInManager.CreateUserPrincipalAsync((await _userService.CreateUserBuilder()
+                .FindByEmail(userDto.Email))!);
         userPrincipal.SetScopes(new[]
         {
             OpenIddictConstants.Permissions.Scopes.Email,
