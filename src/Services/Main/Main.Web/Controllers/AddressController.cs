@@ -1,6 +1,6 @@
 ﻿using Main.Application.Interfaces;
 using Main.Application.Models;
-using Main.Dto;
+using Main.Dto.Address;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
@@ -18,25 +18,25 @@ public class AddressController : CustomControllerBase
         _userService = userService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Get()
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetAddress(Guid id)
     {
-        var user = await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser();
-
-        if (user is null)
+        if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
             return ForbidUnauthorizedClient();
 
-        var list = new List<AddressDto>();
+        if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
+            return BadRequestInvalidObject(nameof(Address));
 
-        user.Addresses.ForEach(a => list.Add(new AddressDto
-        {
-            City = a.City,
-            Street = a.Street,
-            House = a.House,
-            Apartment = a.Apartment,
-            Commentary = a.Commentary
-        }));
+        return Ok(Mapper.Map<DisplayAddressDto>(address));
+    }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAddresses()
+    {
+        if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
+            return ForbidUnauthorizedClient();
+
+        var list = Mapper.Map<List<Address>, List<DisplayAddressDto>>(user.Addresses);
         return Ok(list);
     }
 
@@ -46,31 +46,47 @@ public class AddressController : CustomControllerBase
         if (!ModelState.IsValid)
             return BadRequest();
 
-        if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
+        if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
             return ForbidUnauthorizedClient();
 
-        var address = new Address
-        {
-            City = addressDto.City,
-            Street = addressDto.Street,
-            House = addressDto.House,
-            Apartment = addressDto.Apartment,
-            Commentary = addressDto.Commentary,
-            User = user
-        };
+        var address = Mapper.Map<Address>(addressDto);
+        address.User = user;
 
         if (await _addressService.CreateAddress(address) is not { } resultAddress)
             throw new Exception("Address is not created");
 
-        var result = new AddressDto
-        {
-            City = resultAddress.City,
-            Street = resultAddress.Street,
-            House = resultAddress.House,
-            Apartment = resultAddress.Apartment,
-            Commentary = resultAddress.Commentary
-        };
+        return Ok(Mapper.Map<AddressDto>(resultAddress));
+    }
 
-        return Ok(result);
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateAddress([FromRoute] Guid id, [FromBody] UpdateAddressDto addressDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
+        if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
+            return ForbidUnauthorizedClient();
+
+        if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
+            return BadRequestInvalidObject(nameof(Address));
+
+        address = Mapper.Map(addressDto, address);
+        await _addressService.UpdateAddress(address);
+
+        return Ok(Mapper.Map<AddressDto>(address));
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteAddress([FromRoute] Guid id)
+    {
+        if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
+            return ForbidUnauthorizedClient();
+
+        if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
+            return BadRequestInvalidObject(nameof(Address));
+
+        await _addressService.DeleteAddress(address);
+
+        return Ok();
     }
 }

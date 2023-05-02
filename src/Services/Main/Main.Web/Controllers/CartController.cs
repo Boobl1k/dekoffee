@@ -1,5 +1,6 @@
 ﻿using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
@@ -21,7 +22,7 @@ public class CartController : CustomControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetCart()
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
             return BadRequest();
@@ -29,7 +30,7 @@ public class CartController : CustomControllerBase
         if (await _cartService.CreateCartBuilder().WithProducts().GetCart(user.Id) is not { } cart)
             return BadRequestInvalidObject(nameof(Cart));
 
-        return Ok(cart.Products);
+        return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(cart.Products));
     }
 
     [HttpPost("AddProduct/{id:guid}")]

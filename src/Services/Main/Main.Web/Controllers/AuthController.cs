@@ -1,7 +1,8 @@
 ﻿using System.Security.Claims;
+using System.Text.Json;
 using Main.Application.Interfaces;
 using Main.Application.Models;
-using Main.Dto;
+using Main.Dto.User;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +14,7 @@ namespace Main.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : CustomControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
@@ -33,21 +34,18 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
     {
         if (!ModelState.IsValid) return BadRequest();
-
-        var guid = Guid.NewGuid();
-
-        var user = new User
-        {
-            Id = guid,
-            UserName = registerUserDto.Username,
-            Email = registerUserDto.Email
-        };
-
+        
         if (await _userService.ValidateCredentials(registerUserDto.Email, checkPassword: false))
             return BadRequest("User with same Email already exists");
 
         if (registerUserDto.Password != registerUserDto.RepeatPassword)
             return BadRequest("Mismatch of passwords");
+        
+        var guid = Guid.NewGuid();
+        var user = Mapper.Map<User>(registerUserDto);
+        user.Id = guid;
+
+        Console.WriteLine(JsonSerializer.Serialize(user));
 
         var result = await _userManager.CreateAsync(user, registerUserDto.Password);
         Console.WriteLine(result.Errors.FirstOrDefault()?.Description);

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Main.Dto;
+namespace Main.Dto.Product;
 
 public class BlockUnblockProductDto
 {

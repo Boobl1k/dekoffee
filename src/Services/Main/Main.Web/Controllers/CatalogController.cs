@@ -1,6 +1,6 @@
 ﻿using Main.Application.Interfaces;
 using Main.Application.Models;
-using Main.Dto;
+using Main.Dto.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
@@ -19,15 +19,16 @@ public class CatalogController : CustomControllerBase
     [HttpGet]
     public async Task<IActionResult> GetProducts()
     {
-        return Ok((await _productService.GetProducts()).ToList());
+        var products = (await _productService.GetProducts()).ToList();
+        return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(products));
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetProduct([FromQuery] Guid id)
+    public async Task<IActionResult> GetProduct([FromRoute] Guid id)
     {
         return await _productService.GetProduct(id) is not { } product
             ? BadRequestInvalidObject(nameof(Product))
-            : Ok(product);
+            : Ok(Mapper.Map<DisplayProductDto>(product));
     }
 
     [HttpPost]
@@ -35,47 +36,30 @@ public class CatalogController : CustomControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var product = new Product
-        {
-            Title = productDto.Title,
-            Price = productDto.Price,
-            Description = productDto.Description,
-            Net = productDto.Net,
-            Gross = productDto.Gross,
-            Country = productDto.Country,
-            EnergyValue = productDto.EnergyValue,
-            IsBlocked = productDto.IsBlocked
-        };
+        var product = Mapper.Map<Product>(productDto);
+
         if (await _productService.CreateProduct(product) is not { } result)
             throw new Exception("Product is not created");
 
-        return Ok(result);
+        return Ok(Mapper.Map<DisplayProductDto>(result));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateProduct([FromQuery] Guid id, [FromBody] UpdateProductDto productDto)
+    public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductDto productDto)
     {
         if (!ModelState.IsValid) return BadRequest();
 
         if (await _productService.GetProduct(id) is not { } product)
             return BadRequestInvalidObject(nameof(Product));
 
-        product.Title = productDto.Title;
-        product.Price = productDto.Price;
-        product.Description = productDto.Description;
-        product.Net = productDto.Net;
-        product.Gross = productDto.Gross;
-        product.Country = productDto.Country;
-        product.EnergyValue = productDto.EnergyValue;
-        product.IsBlocked = productDto.IsBlocked;
-
+        product = Mapper.Map(productDto, product);
         var result = await _productService.UpdateProduct(product);
 
-        return Ok(result);
+        return Ok(Mapper.Map<DisplayProductDto>(result));
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteProduct([FromQuery] Guid id)
+    public async Task<IActionResult> DeleteProduct([FromRoute] Guid id)
     {
         if (await _productService.GetProduct(id) is not { } product)
             return BadRequest();
@@ -85,7 +69,7 @@ public class CatalogController : CustomControllerBase
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> BlockUnblockProduct([FromQuery] Guid id,
+    public async Task<IActionResult> BlockUnblockProduct([FromRoute] Guid id,
         [FromBody] BlockUnblockProductDto productDto)
     {
         if (!ModelState.IsValid) return BadRequest();
@@ -93,13 +77,14 @@ public class CatalogController : CustomControllerBase
         if (await _productService.GetProduct(id) is not { } product)
             return BadRequest();
 
-        product.IsBlocked = productDto.IsBlocked;
+        product = Mapper.Map(productDto, product);
+
         var result = await _productService.UpdateProduct(product);
-        return Ok(result);
+        return Ok(Mapper.Map<DisplayProductDto>(result));
     }
 
     [HttpGet("Search")]
-    public async Task<IActionResult> SearchByKeywords(string? keyword)
+    public async Task<IActionResult> SearchByKeywords([FromQuery] string? keyword)
     {
         if (string.IsNullOrWhiteSpace(keyword))
             return NoContent();
@@ -112,6 +97,6 @@ public class CatalogController : CustomControllerBase
                     .Where(c => !char.IsWhiteSpace(c)))))
             .ToList();
 
-        return Ok(result);
+        return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(result));
     }
 }

@@ -1,6 +1,6 @@
-﻿using ServiceStack.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Main.Dto;
+namespace Main.Dto.User;
 
 public class LoginUserDto
 {

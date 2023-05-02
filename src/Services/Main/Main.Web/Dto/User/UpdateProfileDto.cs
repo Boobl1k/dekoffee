@@ -1,4 +1,4 @@
-﻿namespace Main.Dto;
+﻿namespace Main.Dto.User;
 
 public class UpdateProfileDto : ProfileDto
 {

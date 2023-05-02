@@ -1,6 +1,6 @@
 ﻿using Main.Application.Interfaces;
 using Main.Application.Models;
-using Main.Dto;
+using Main.Dto.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
@@ -19,18 +19,12 @@ public class ProfileController : CustomControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetProfile()
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
             return ForbidUnauthorizedClient();
-
-        var profileDto = new ProfileDto
-        {
-            Email = user.Email ?? "",
-            Username = user.UserName ?? ""
-        };
-
-        return Ok(profileDto);
+        
+        return Ok(Mapper.Map<ProfileDto>(user));
     }
 
     [HttpPut]
