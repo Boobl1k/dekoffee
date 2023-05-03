@@ -21,8 +21,6 @@ public class ProductProfile : Profile
             .ReverseMap();
 
         CreateMap<Product, BlockUnblockProductDto>()
-            .ForMember(dest => dest.IsBlocked,
-                opt => opt.MapFrom(src => src.IsBlocked))
             .ReverseMap();
     }
 }

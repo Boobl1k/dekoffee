@@ -31,58 +31,6 @@ public class CatalogController : CustomControllerBase
             : Ok(Mapper.Map<DisplayProductDto>(product));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddProduct([FromBody] AddProductDto productDto)
-    {
-        if (!ModelState.IsValid) return BadRequest();
-
-        var product = Mapper.Map<Product>(productDto);
-
-        if (await _productService.CreateProduct(product) is not { } result)
-            throw new Exception("Product is not created");
-
-        return Ok(Mapper.Map<DisplayProductDto>(result));
-    }
-
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductDto productDto)
-    {
-        if (!ModelState.IsValid) return BadRequest();
-
-        if (await _productService.GetProduct(id) is not { } product)
-            return BadRequestInvalidObject(nameof(Product));
-
-        product = Mapper.Map(productDto, product);
-        var result = await _productService.UpdateProduct(product);
-
-        return Ok(Mapper.Map<DisplayProductDto>(result));
-    }
-
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteProduct([FromRoute] Guid id)
-    {
-        if (await _productService.GetProduct(id) is not { } product)
-            return BadRequest();
-
-        await _productService.DeleteProduct(product);
-        return Ok();
-    }
-
-    [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> BlockUnblockProduct([FromRoute] Guid id,
-        [FromBody] BlockUnblockProductDto productDto)
-    {
-        if (!ModelState.IsValid) return BadRequest();
-
-        if (await _productService.GetProduct(id) is not { } product)
-            return BadRequest();
-
-        product = Mapper.Map(productDto, product);
-
-        var result = await _productService.UpdateProduct(product);
-        return Ok(Mapper.Map<DisplayProductDto>(result));
-    }
-
     [HttpGet("Search")]
     public async Task<IActionResult> SearchByKeywords([FromQuery] string? keyword)
     {

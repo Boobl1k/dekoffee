@@ -9,12 +9,10 @@ namespace Main.Controllers;
 [Route("[controller]"), OpenIdDictAuthorize]
 public class ProfileController : CustomControllerBase
 {
-    private readonly IProfileService<User> _profileService;
     private readonly IUserService<User> _userService;
 
-    public ProfileController(IProfileService<User> profileService, IUserService<User> userService)
+    public ProfileController(IUserService<User> userService)
     {
-        _profileService = profileService;
         _userService = userService;
     }
 
@@ -34,11 +32,9 @@ public class ProfileController : CustomControllerBase
 
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
             return ForbidUnauthorizedClient();
-
-        user.UserName = profileDto.Username;
-        user.Email = profileDto.Email;
-
-        await _profileService.UpdateProfile(user);
+        
+        user = Mapper.Map(profileDto, user);
+        await _userService.UpdateUser(user);
         return NoContent();
     }
 }

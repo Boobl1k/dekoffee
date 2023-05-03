@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Main.Application.Interfaces;
+﻿using Main.Application.Interfaces;
 using Main.Application.Models;
 using Main.Infrastructure.Data;
 using Main.Infrastructure.Options;
@@ -25,8 +24,8 @@ public static class ProgramExtensions
         builder.Services.AddTransient<IUserService<User>, UserService>();
         builder.Services.AddTransient<IProductService<Product>, ProductService>();
         builder.Services.AddTransient<ICartService, CartService>();
-        builder.Services.AddTransient<IProfileService<User>, ProfileService>();
         builder.Services.AddTransient<IAddressService, AddressService>();
+        builder.Services.AddTransient<IOrderService, OrderService>();
     }
 
     public static void AddCustomSwaggerGen(this WebApplicationBuilder builder) =>

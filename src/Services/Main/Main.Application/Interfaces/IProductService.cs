@@ -2,7 +2,7 @@
 
 public interface IProductService<TEntity> where TEntity : class
 {
-    Task<IEnumerable<TEntity>> GetProducts();
+    Task<List<TEntity>> GetProducts();
     Task<TEntity?> GetProduct(Guid id);
     Task<TEntity?> CreateProduct(TEntity entity);
     Task<TEntity> UpdateProduct(TEntity entity);

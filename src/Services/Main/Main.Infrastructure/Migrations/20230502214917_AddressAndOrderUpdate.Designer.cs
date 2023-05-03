@@ -3,6 +3,7 @@ using System;
 using Main.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Main.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230502214917_AddressAndOrderUpdate")]
+    partial class AddressAndOrderUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,7 +85,7 @@ namespace Main.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<double>("TotalSum")
+                    b.Property<double>("TotalPrice")
                         .HasColumnType("double precision");
 
                     b.HasKey("Id");
@@ -144,7 +147,7 @@ namespace Main.Infrastructure.Migrations
                     b.Property<DateTime>("CompleteTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("CourierId")
+                    b.Property<Guid>("CourierId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreationTime")
@@ -158,9 +161,6 @@ namespace Main.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<double>("TotalSum")
-                        .HasColumnType("double precision");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -685,7 +685,8 @@ namespace Main.Infrastructure.Migrations
                     b.HasOne("Main.Application.Models.Courier", "Courier")
                         .WithMany()
                         .HasForeignKey("CourierId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Main.Application.Models.User", "User")
                         .WithMany()

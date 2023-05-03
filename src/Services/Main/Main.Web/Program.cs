@@ -3,7 +3,7 @@ using Main;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
-services.AddControllers();
+services.AddControllers().AddNewtonsoftJson();
 
 builder.AddCustomDb();
 builder.AddCustomIdentity();

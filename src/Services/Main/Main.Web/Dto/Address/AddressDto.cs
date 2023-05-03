@@ -9,4 +9,5 @@ public class AddressDto
     [Required] public string House { get; set; } = null!;
     [Required] public string Apartment { get; set; } = null!;
     [Required] public string Commentary { get; set; } = null!;
+    [Required] public string Floor { get; set; } = null!;
 }

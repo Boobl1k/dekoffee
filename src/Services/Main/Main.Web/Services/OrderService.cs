@@ -1,57 +1,40 @@
-﻿using Main.Application.Interfaces;
+﻿using System.Linq.Expressions;
+using Main.Application.Interfaces;
 using Main.Application.Models;
 using Main.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Services;
 
-public class OrderService : IOrderService
+public class OrderService : IOrderService, IOrderBuilder
 {
     private readonly AppDbContext _dbContext;
+    private IQueryable<Order> _query;
 
     public OrderService(AppDbContext dbContext)
     {
         _dbContext = dbContext;
+        _query = dbContext.Orders;
     }
 
-    public async Task<IEnumerable<Order>> GetOrders() =>
-        await _dbContext.Orders.ToListAsync();
+    public async Task<List<Order>> GetOrders() =>
+        await _query.ToListAsync();
 
     public async Task<Order?> GetOrder(Guid id) =>
-        await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+        await _query.FirstOrDefaultAsync(o => o.Id == id);
 
     public async Task<Order?> CreateOrder(Order order)
     {
         _dbContext.Orders.Add(order);
         await _dbContext.SaveChangesAsync();
-        return await GetOrder(order.Id);
+        return (await FullOrder(order))!;
     }
 
-    public async Task<Order?> UpdateOrderStatus(Guid id, OrderStatus status)
+    public async Task<Order> UpdateOrder(Order order)
     {
-        var order = await GetOrder(id);
-        if (order is null)
-            return null;
-
-        switch (status)
-        {
-            case OrderStatus.Created:
-            case OrderStatus.Processing:
-            case OrderStatus.InCooking:
-            case OrderStatus.InDelivery:
-                break;
-            case OrderStatus.Completed:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(status), status, null);
-        }
-
-        order.Status = status;
-
         _dbContext.Orders.Update(order);
-
         await _dbContext.SaveChangesAsync();
-        return await GetOrder(id);
+        return (await FullOrder(order))!;
     }
 
     public async Task DeleteOrder(Order order)
@@ -59,4 +42,41 @@ public class OrderService : IOrderService
         _dbContext.Orders.Remove(order);
         await _dbContext.SaveChangesAsync();
     }
+
+    public IOrderBuilder WithAddress()
+    {
+        _query = _query.Include(p => p.Address);
+        return this;
+    }
+
+    public IOrderBuilder WithUser(Expression<Func<Order, bool>>? expression = null)
+    {
+        _query = _query.Include(p => p.User);
+        if (expression is not null)
+            _query = _query.Where(expression);
+
+        return this;
+    }
+
+    public IOrderBuilder WithCourier()
+    {
+        _query = _query.Include(p => p.Courier);
+        return this;
+    }
+
+    public IOrderBuilder WithProducts()
+    {
+        _query = _query.Include(p => p.Products);
+        return this;
+    }
+
+    public IOrderBuilder CreateOrderBuilder() => this;
+
+    private async Task<Order?> FullOrder(Order order) =>
+        await CreateOrderBuilder()
+            .WithAddress()
+            .WithCourier()
+            .WithUser()
+            .WithProducts()
+            .GetOrder(order.Id);
 }

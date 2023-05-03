@@ -33,6 +33,12 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         builder.Entity<Invoice>()
             .HasOne(e => e.Order)
             .WithOne();
+
+        builder.Entity<Order>()
+            .HasOne(o => o.Courier)
+            .WithMany()
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 
     public DbSet<Product> Products { get; set; } = null!;

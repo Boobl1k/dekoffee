@@ -8,22 +8,22 @@ public class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<User, RegisterUserDto>()
-            .ForMember(dest => dest.Username,
-                opt => opt.MapFrom(src => src.UserName))
-            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+        CreateMap<User, LoginUserDto>()
             .ReverseMap();
-        
+
+        CreateMap<User, RegisterUserDto>()
+            .ReverseMap();
+
         CreateMap<User, ProfileDto>()
-            .ForMember(dest => dest.Username,
-                opt => opt.MapFrom(src => src.UserName))
-            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ReverseMap();
 
         CreateMap<User, UpdateProfileDto>()
-            .ForMember(dest => dest.Username,
-                opt => opt.MapFrom(src => src.UserName))
-            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ReverseMap();
+
+        CreateMap<User, BlockUnblockUserDto>()
+            .ReverseMap();
+
+        CreateMap<User, DisplayUserDto>()
             .ReverseMap();
     }
 }

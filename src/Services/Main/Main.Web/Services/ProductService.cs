@@ -1,7 +1,6 @@
 ﻿using Main.Application.Interfaces;
 using Main.Application.Models;
 using Main.Infrastructure.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Services;
@@ -15,7 +14,7 @@ public class ProductService : IProductService<Product>
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Product>> GetProducts() =>
+    public async Task<List<Product>> GetProducts() =>
         await _dbContext.Products.ToListAsync();
 
     public async Task<Product?> GetProduct(Guid id) =>

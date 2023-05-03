@@ -29,7 +29,7 @@ public class CartService : ICartService, ICartBuilder
         var cart = await CreateCartBuilder().WithProducts().GetCart(userId) ?? throw new Exception("Not logged in");
 
         cart.Products.Add(product);
-        cart.TotalPrice += product.Price;
+        cart.TotalSum += product.Price;
         await _dbContext.SaveChangesAsync();
 
         var lastItem = (await GetCart(cart.Id) ?? throw new Exception("No such cart")).Products
@@ -45,7 +45,7 @@ public class CartService : ICartService, ICartBuilder
 
         var product = cart.Products[index];
         cart.Products.RemoveAt(index);
-        cart.TotalPrice -= product.Price;
+        cart.TotalSum -= product.Price;
         await _dbContext.SaveChangesAsync();
     }
 
@@ -55,17 +55,11 @@ public class CartService : ICartService, ICartBuilder
             throw new Exception("Not logged in");
 
         cart.Products.Clear();
-        cart.TotalPrice = 0;
+        cart.TotalSum = 0;
         await _dbContext.SaveChangesAsync();
     }
 
     public ICartBuilder CreateCartBuilder() => this;
-
-    public ICartBuilder WithUser()
-    {
-        _query = _query.Include(c => c.User);
-        return this;
-    }
 
     public ICartBuilder WithProducts()
     {
