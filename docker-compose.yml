@@ -1,10 +1,10 @@
 services:
-  main-service:
+  api:
     build:
       context: .
       dockerfile: /src/Services/Main/Main.Web/DockerfileDev
     ports:
-      - 81:81
+      - 5000:5000
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
@@ -18,15 +18,21 @@ services:
       - './src/Services/Main/Main.Application/:/app/Main.Application'
       - './src/Services/Main/Main.Infrastructure/:/app/Main.Infrastructure'
     depends_on:
-      - rabbit
       - postgres
 
-  rabbit:
-    image: rabbitmq:3-management
+  front:
+    build:
+      context: ./src/Web/react-app/
     ports:
-      - 5671:5671
-      - 5672:5672
-      - 15672:15672
+      - 3000:3000
+    environment:
+      - PORT=3000
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./src/Web/react-app:/app
+      - "/app/node_modules"
+    depends_on:
+      - api
 
   postgres:
     image: postgres:14.5

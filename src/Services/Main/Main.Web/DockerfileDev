@@ -11,4 +11,4 @@ COPY ["src/Dekoffee.sln", "/"]
 
 WORKDIR "/app/Main.Web"
 
-ENTRYPOINT ["dotnet", "watch", "run", "--urls=http://+:81"] 
+ENTRYPOINT ["dotnet", "watch", "run", "--urls=http://+:5000"] 
