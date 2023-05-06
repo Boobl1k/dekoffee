@@ -11,3 +11,5 @@ they have to comment the thread and give more explanations about the problem
 to it in comment or makes changes in current PR 
 (and also comments about new changes under the thread).
 The second way is better
+* performer cannot close threads. The exception is when reviewer asks them about it
+* each performer and reviewer must comment on each open topic in each cycle
