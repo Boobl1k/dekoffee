@@ -1,0 +1,14 @@
+﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS dev
+WORKDIR /app
+
+COPY ["src/Services/Main/Main.Web/Main.Web.csproj", "Main.Web/"]
+COPY ["src/Services/Main/Main.Application/Main.Application.csproj", "Main.Application/"]
+COPY ["src/Services/Main/Main.Infrastructure/Main.Infrastructure.csproj", "Main.Infrastructure/"]
+RUN dotnet restore "Main.Web/Main.Web.csproj"
+
+COPY ["src/Services/Main/", "/"]
+COPY ["src/Dekoffee.sln", "/"]
+
+WORKDIR "/app/Main.Web"
+
+ENTRYPOINT ["dotnet", "watch", "run", "--urls=http://+:81"] 

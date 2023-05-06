@@ -1,0 +1,39 @@
+services:
+  main-service:
+    build:
+      context: .
+      dockerfile: /src/Services/Main/Main.Web/DockerfileDev
+    ports:
+      - 81:81
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - "/app/Main.Web/bin"
+      - "/app/Main.Web/obj"
+      - "/app/Main.Application/bin"
+      - "/app/Main.Application/obj"
+      - "/app/Main.Infrastructure/bin"
+      - "/app/Main.Infrastructure/obj"
+      - './src/Services/Main/Main.Web/:/app/Main.Web'
+      - './src/Services/Main/Main.Application/:/app/Main.Application'
+      - './src/Services/Main/Main.Infrastructure/:/app/Main.Infrastructure'
+    depends_on:
+      - rabbit
+      - postgres
+
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - 5671:5671
+      - 5672:5672
+      - 15672:15672
+
+  postgres:
+    image: postgres:14.5
+    environment:
+      POSTGRES_DB: "dekoffeeDb"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pass"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    ports:
+      - 5432:5432
