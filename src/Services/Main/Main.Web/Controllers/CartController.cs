@@ -1,5 +1,7 @@
-﻿using Main.Application.Interfaces;
+﻿using System.Net.Mime;
+using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto;
 using Main.Dto.Product;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +23,10 @@ public class CartController : CustomControllerBase
         _productService = productService;
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayProductDto>))]
     [HttpGet]
     public async Task<IActionResult> GetCart()
     {
@@ -28,43 +34,51 @@ public class CartController : CustomControllerBase
             return BadRequest();
 
         if (await _cartService.CreateCartBuilder().WithProducts().GetCart(user.Id) is not { } cart)
-            return BadRequestInvalidObject(nameof(Cart));
+            return NotFound();
 
         return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(cart.Products));
     }
 
-    [HttpPost("AddProduct/{id:guid}")]
-    public async Task<IActionResult> AddProductToCart(Guid id)
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [HttpPost("{id:guid}")]
+    public async Task<IActionResult> AddProductToCart([FromRoute] Guid id)
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         if (await _productService.GetProduct(id) is not { } product)
-            return BadRequestInvalidObject(nameof(Product));
+            return NotFound();
 
         if (await _cartService.AddProductToCart(user.Id, product) is null)
-            throw new Exception("Can't add Product to cart");
+            throw new Exception("Cannot add Product");
 
-        return Ok();
+        return StatusCode(StatusCodes.Status201Created, product.Id);
     }
 
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpDelete("{productIndex:int}")]
-    public async Task<IActionResult> RemoveProductFromCart(int productIndex)
+    public async Task<IActionResult> RemoveProductFromCart([FromRoute] int productIndex)
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         await _cartService.RemoveProductFromCart(user.Id, productIndex);
-        return Ok();
+        return NoContent();
     }
 
-    [HttpDelete("Clear")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpDelete]
     public async Task<IActionResult> ClearCart()
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         await _cartService.ClearCart(user.Id);
-        return Ok();
+        return NoContent();
     }
 }

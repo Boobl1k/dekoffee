@@ -1,5 +1,7 @@
-﻿using Main.Application.Interfaces;
+﻿using System.Net.Mime;
+using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto;
 using Main.Dto.Order;
 using Main.Dto.Product;
 using Main.Dto.User;
@@ -25,51 +27,66 @@ public class AdminController : CustomControllerBase
 
     #region Users
 
-    [HttpGet($"Users")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayUserDto>))]
+    [HttpGet("users")]
     public async Task<IActionResult> GetUsers()
     {
         var users = await _userService.CreateUserBuilder().GetUsers();
         return Ok(Mapper.Map<List<User>, List<DisplayUserDto>>(users));
     }
 
-    [HttpGet("Users/{id:guid}")]
-    public async Task<IActionResult> GetUser(Guid id)
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayUserDto))]
+    [HttpGet("users/{id:guid}")]
+    public async Task<IActionResult> GetUser([FromRoute] Guid id)
     {
         if (await _userService.CreateUserBuilder().FindById(id) is not { } user)
-            return BadRequestInvalidObject(nameof(User));
+            return NotFound();
         return Ok(Mapper.Map<DisplayUserDto>(user));
     }
 
-    [HttpPatch("Users/BlockUnblock/{id:guid}")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpPatch("users/{id:guid}")]
     public async Task<IActionResult> BlockUnblockUser([FromRoute] Guid id,
         [FromBody] BlockUnblockUserDto userDto)
     {
         if (!ModelState.IsValid) return BadRequest();
         if (await _userService.CreateUserBuilder().FindById(id) is not { } user)
-            return BadRequestInvalidObject(nameof(User));
+            return NotFound();
 
         user = Mapper.Map(userDto, user);
 
-        var result = await _userService.UpdateUser(user);
-        return Ok(Mapper.Map<DisplayUserDto>(result));
+        await _userService.UpdateUser(user);
+        return NoContent();
     }
 
-    [HttpPatch("Users/Delete/{id:guid}")]
-    public async Task<IActionResult> DeleteUser(Guid id)
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpDelete("users/{id:guid}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
     {
         if (await _userService.CreateUserBuilder().FindById(id) is not { } user)
-            return BadRequestInvalidObject(nameof(User));
+            return NotFound();
         user.IsDeleted = true;
 
-        var result = await _userService.UpdateUser(user);
-        return Ok(Mapper.Map<DisplayUserDto>(result));
+        await _userService.UpdateUser(user);
+        return NoContent();
     }
 
     #endregion
 
     #region Products
 
-    [HttpPost("Products")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [HttpPost("products")]
     public async Task<IActionResult> AddProduct([FromBody] AddProductDto productDto)
     {
         if (!ModelState.IsValid) return BadRequest();
@@ -77,48 +94,57 @@ public class AdminController : CustomControllerBase
         var product = Mapper.Map<Product>(productDto);
 
         if (await _productService.CreateProduct(product) is not { } result)
-            throw new Exception("Product is not created");
+            throw new Exception("Cannot create Product");
 
-        return Ok(Mapper.Map<DisplayProductDto>(result));
+        return StatusCode(StatusCodes.Status201Created, result.Id);
     }
 
-    [HttpPut("Products/{id:guid}")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpPut("products/{id:guid}")]
     public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductDto productDto)
     {
         if (!ModelState.IsValid) return BadRequest();
 
         if (await _productService.GetProduct(id) is not { } product)
-            return BadRequestInvalidObject(nameof(Product));
+            return NotFound();
 
         product = Mapper.Map(productDto, product);
-        var result = await _productService.UpdateProduct(product);
-
-        return Ok(Mapper.Map<DisplayProductDto>(result));
+        await _productService.UpdateProduct(product);
+        return NoContent();
     }
 
-    [HttpDelete("Products/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpDelete("products/{id:guid}")]
     public async Task<IActionResult> DeleteProduct([FromRoute] Guid id)
     {
         if (await _productService.GetProduct(id) is not { } product)
-            return BadRequestInvalidObject(nameof(Product));
+            return NotFound();
 
         await _productService.DeleteProduct(product);
-        return Ok();
+        return NoContent();
     }
 
-    [HttpPatch("Products/{id:guid}")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpPatch("products/{id:guid}")]
     public async Task<IActionResult> BlockUnblockProduct([FromRoute] Guid id,
         [FromBody] BlockUnblockProductDto productDto)
     {
         if (!ModelState.IsValid) return BadRequest();
 
         if (await _productService.GetProduct(id) is not { } product)
-            return BadRequestInvalidObject(nameof(Product));
+            return NotFound();
 
         product = Mapper.Map(productDto, product);
 
-        var result = await _productService.UpdateProduct(product);
-        return Ok(Mapper.Map<DisplayProductDto>(result));
+        await _productService.UpdateProduct(product);
+        return NoContent();
     }
 
     #endregion
@@ -126,7 +152,9 @@ public class AdminController : CustomControllerBase
 
     #region Orders
 
-    [HttpGet("Orders")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(List<DisplayOrderDto>))]
+    [HttpGet("orders")]
     public async Task<IActionResult> GetOrders()
     {
         var orders = await _orderService.CreateOrderBuilder()
@@ -140,8 +168,11 @@ public class AdminController : CustomControllerBase
         return Ok(list);
     }
 
-    [HttpGet("Orders/{id:guid}")]
-    public async Task<IActionResult> GetOrder(Guid id)
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DisplayOrderDto))]
+    [HttpGet("orders/{id:guid}")]
+    public async Task<IActionResult> GetOrder([FromRoute] Guid id)
     {
         if (await _orderService.CreateOrderBuilder()
                 .WithCourier()
@@ -149,13 +180,17 @@ public class AdminController : CustomControllerBase
                 .WithProducts()
                 .WithUser()
                 .GetOrder(id) is not { } order)
-            return BadRequestInvalidObject(nameof(Order));
+            return NotFound();
 
         return Ok(Mapper.Map<DisplayOrderDto>(order));
     }
 
-    [HttpPatch("Orders/ChangeStatus/{id:guid}")]
-    public async Task<IActionResult> ChangeOrderStatus(Guid id, [FromBody] UpdateOrderStatusDto orderDto)
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpPatch("orders/{id:guid}")]
+    public async Task<IActionResult> ChangeOrderStatus([FromRoute] Guid id, [FromBody] UpdateOrderStatusDto orderDto)
     {
         if (!ModelState.IsValid) return BadRequest();
 
@@ -165,14 +200,14 @@ public class AdminController : CustomControllerBase
                 .WithUser()
                 .WithProducts()
                 .GetOrder(id) is not { } order)
-            return BadRequestInvalidObject(nameof(Order));
+            return NotFound();
 
         order = Mapper.Map(orderDto, order);
         order.LastUpdateTime = DateTime.Now;
 
         await _orderService.UpdateOrder(order);
 
-        return Ok();
+        return NoContent();
     }
 
     #endregion
