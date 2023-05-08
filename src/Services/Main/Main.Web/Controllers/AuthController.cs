@@ -1,7 +1,8 @@
-﻿using System.Security.Claims;
-using System.Text.Json;
+﻿using System.Net.Mime;
+using System.Security.Claims;
 using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto;
 using Main.Dto.User;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -30,6 +31,11 @@ public class AuthController : CustomControllerBase
         _cartService = cartService;
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
     {
@@ -45,19 +51,14 @@ public class AuthController : CustomControllerBase
         var user = Mapper.Map<User>(registerUserDto);
         user.Id = guid;
 
-        Console.WriteLine(JsonSerializer.Serialize(user));
-
         var result = await _userManager.CreateAsync(user, registerUserDto.Password);
-        Console.WriteLine(result.Errors.FirstOrDefault()?.Description);
-
         if (!result.Succeeded)
-            return Forbid(new AuthenticationProperties(result.Errors.ToDictionary(error => error.Code,
-                error => error.Description)!));
+            return StatusCode(StatusCodes.Status403Forbidden,
+                new ModelStateDto { Errors = result.Errors.Select(e => e.Description).ToList() });
 
         if (await _cartService.CreateCart(new Cart { Id = guid }) is null)
             throw new Exception("Cart is not created");
-
-        return Ok();
+        return StatusCode(StatusCodes.Status201Created, user.Id);
     }
 
     [HttpPost("Logout")]
@@ -67,12 +68,16 @@ public class AuthController : CustomControllerBase
         return Ok();
     }
 
-    [HttpPost("Login"), Consumes("application/x-www-form-urlencoded")]
+    [Consumes("application/x-www-form-urlencoded")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login([FromForm] LoginUserDto userDto)
     {
         if (!ModelState.IsValid) return BadRequest();
         var request = HttpContext.GetOpenIddictServerRequest() ?? throw new Exception("OpenIdDict config is wrong");
-
         if (!await _userService.ValidateCredentials(userDto.Email, userDto.Password, true))
             return Forbid(new AuthenticationProperties(new Dictionary<string, string?>
             {

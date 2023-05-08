@@ -1,5 +1,7 @@
-﻿using Main.Application.Interfaces;
+﻿using System.Net.Mime;
+using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto;
 using Main.Dto.Product;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,8 @@ public class CatalogController : CustomControllerBase
         _productService = productService;
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayProductDto>))]
     [HttpGet]
     public async Task<IActionResult> GetProducts()
     {
@@ -23,15 +27,21 @@ public class CatalogController : CustomControllerBase
         return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(products));
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayProductDto))]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetProduct([FromRoute] Guid id)
     {
         return await _productService.GetProduct(id) is not { } product
-            ? BadRequestInvalidObject(nameof(Product))
+            ? NotFound()
             : Ok(Mapper.Map<DisplayProductDto>(product));
     }
 
-    [HttpGet("Search")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayProductDto>))]
+    [HttpGet("search")]
     public async Task<IActionResult> SearchByKeywords([FromQuery] string? keyword)
     {
         if (string.IsNullOrWhiteSpace(keyword))

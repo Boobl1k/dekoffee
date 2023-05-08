@@ -1,12 +1,14 @@
-﻿using Main.Application.Interfaces;
+﻿using System.Net.Mime;
+using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto;
 using Main.Dto.Address;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
 
 [ApiController]
-[Route("[controller]"), OpenIdDictAuthorize]
+[Route("addresses"), OpenIdDictAuthorize]
 public class AddressController : CustomControllerBase
 {
     private readonly IAddressService _addressService;
@@ -18,28 +20,40 @@ public class AddressController : CustomControllerBase
         _userService = userService;
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayAddressDto))]
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetAddress(Guid id)
+    public async Task<IActionResult> GetAddress([FromRoute] Guid id)
     {
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
-            return BadRequestInvalidObject(nameof(Address));
+            return NotFound();
 
         return Ok(Mapper.Map<DisplayAddressDto>(address));
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayAddressDto>))]
     [HttpGet]
     public async Task<IActionResult> GetAddresses()
     {
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return Unauthorized();
 
         var list = Mapper.Map<List<Address>, List<DisplayAddressDto>>(user.Addresses);
         return Ok(list);
     }
 
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
     [HttpPost]
     public async Task<IActionResult> AddAddress([FromBody] AddAddressDto addressDto)
     {
@@ -47,17 +61,22 @@ public class AddressController : CustomControllerBase
             return BadRequest();
 
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         var address = Mapper.Map<Address>(addressDto);
         address.User = user;
 
         if (await _addressService.CreateAddress(address) is not { } resultAddress)
-            throw new Exception("Address is not created");
+            throw new Exception("Cannot create Address");
 
-        return Ok(Mapper.Map<AddressDto>(resultAddress));
+        return StatusCode(StatusCodes.Status201Created, resultAddress.Id);
     }
 
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateAddress([FromRoute] Guid id, [FromBody] UpdateAddressDto addressDto)
     {
@@ -65,28 +84,31 @@ public class AddressController : CustomControllerBase
             return BadRequest();
 
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
-            return BadRequestInvalidObject(nameof(Address));
+            return NotFound();
 
         address = Mapper.Map(addressDto, address);
         await _addressService.UpdateAddress(address);
 
-        return Ok(Mapper.Map<AddressDto>(address));
+        return NoContent();
     }
 
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteAddress([FromRoute] Guid id)
     {
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
-            return BadRequestInvalidObject(nameof(Address));
+            return NotFound();
 
         await _addressService.DeleteAddress(address);
 
-        return Ok();
+        return NoContent();
     }
 }

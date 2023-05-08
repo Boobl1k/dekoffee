@@ -1,10 +1,12 @@
 ﻿using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto;
 using Main.Infrastructure.Data;
 using Main.Infrastructure.Options;
 using Main.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Abstractions;
@@ -15,6 +17,22 @@ namespace Main;
 public static class ProgramExtensions
 {
     private const string AppName = "Dekoffee";
+
+    public static void AddCustomControllers(this WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
+        builder.Services.AddControllers()
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState.Values.SelectMany(x => x.Errors.Select(p => p.ErrorMessage))
+                        .ToList();
+                    return new BadRequestObjectResult(new ModelStateDto { Errors = errors });
+                };
+            })
+            .AddNewtonsoftJson();
+    }
 
     public static void AddCustomAutoMapper(this WebApplicationBuilder builder) =>
         builder.Services.AddAutoMapper(typeof(Program));
@@ -82,7 +100,7 @@ public static class ProgramExtensions
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options => options.ClaimsIssuer = JwtBearerDefaults.AuthenticationScheme)
-            .AddCookie(options => { options.LoginPath = new PathString("/Auth/Login"); });
+            .AddCookie(options => { options.LoginPath = new PathString("/auth/login"); });
 
     public static void AddCustomOpenIddict(this WebApplicationBuilder builder) =>
         builder.Services.AddOpenIddict()
@@ -95,7 +113,7 @@ public static class ProgramExtensions
                     .AcceptAnonymousClients()
                     .AllowPasswordFlow()
                     .AllowRefreshTokenFlow();
-                options.SetTokenEndpointUris("/Auth/Login");
+                options.SetTokenEndpointUris("/auth/login");
                 var cfg = options.UseAspNetCore();
                 if (builder.Environment.IsDevelopment())
                     cfg.DisableTransportSecurityRequirement();

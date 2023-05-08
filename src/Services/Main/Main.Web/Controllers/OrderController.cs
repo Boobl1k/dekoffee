@@ -1,12 +1,14 @@
-﻿using Main.Application.Interfaces;
+﻿using System.Net.Mime;
+using Main.Application.Interfaces;
 using Main.Application.Models;
+using Main.Dto;
 using Main.Dto.Order;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
 
 [ApiController]
-[Route("[controller]"), OpenIdDictAuthorize]
+[Route("orders"), OpenIdDictAuthorize]
 public class OrderController : CustomControllerBase
 {
     private readonly IOrderService _orderService;
@@ -21,11 +23,14 @@ public class OrderController : CustomControllerBase
         _productService = productService;
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayOrderDto>))]
     [HttpGet]
     public async Task<IActionResult> GetOrders()
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         var orders = await _orderService.CreateOrderBuilder()
             .WithCourier()
@@ -38,11 +43,15 @@ public class OrderController : CustomControllerBase
         return Ok(list);
     }
 
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayOrderDto))]
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetOrder(Guid id)
+    public async Task<IActionResult> GetOrder([FromRoute] Guid id)
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         if (await _orderService.CreateOrderBuilder()
                 .WithCourier()
@@ -50,18 +59,24 @@ public class OrderController : CustomControllerBase
                 .WithProducts()
                 .WithUser(o => o.User.Id == user.Id)
                 .GetOrder(id) is not { } order)
-            return BadRequestInvalidObject(nameof(Order));
+            return NotFound();
 
         return Ok(Mapper.Map<DisplayOrderDto>(order));
     }
 
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDto orderDto)
     {
         if (!ModelState.IsValid) return BadRequest();
 
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         if (orderDto.TotalSum <= 0)
             return BadRequest("Order TotalSum can't be 0 or less than 0.");
@@ -70,7 +85,7 @@ public class OrderController : CustomControllerBase
             return BadRequest("Order can't have 0 Products.");
 
         if (user.Addresses.FirstOrDefault(a => a.Id == orderDto.AddressId) is not { } address)
-            return BadRequestInvalidObject(nameof(Address));
+            return NotFound();
 
         var order = Mapper.Map<Order>(orderDto);
         order.LastUpdateTime = order.CreationTime;
@@ -82,29 +97,33 @@ public class OrderController : CustomControllerBase
         foreach (var productId in orderDto.Products)
         {
             if (allProducts.FirstOrDefault(p => p.Id == productId) is not { } product)
-                return BadRequestInvalidObject(nameof(Product));
+                return NotFound();
 
             order.Products.Add(product);
         }
 
         if (await _orderService.CreateOrder(order) is not { } result)
-            return BadRequestInvalidObject(nameof(Order));
+            throw new Exception("Cannot create Order");
 
-        return Ok(Mapper.Map<DisplayOrderDto>(result));
+        return StatusCode(StatusCodes.Status201Created, result.Id);
     }
 
-    [HttpPost("Cancel/{id:guid}")]
-    public async Task<IActionResult> CancelOrder(Guid id)
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [HttpPost("{id:guid}/cancel")]
+    public async Task<IActionResult> CancelOrder([FromRoute] Guid id)
     {
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
-            return ForbidUnauthorizedClient();
+            return UnauthorizedClient();
 
         if (await _orderService.CreateOrderBuilder().WithUser(o => o.User.Id == user.Id).GetOrder(id) is not { } order)
-            return BadRequestInvalidObject(nameof(Order));
+            return NotFound();
 
         order.Status = OrderStatus.Canceled;
         await _orderService.UpdateOrder(order);
 
-        return NoContent();
+        return StatusCode(StatusCodes.Status201Created, order.Id);
     }
 }
