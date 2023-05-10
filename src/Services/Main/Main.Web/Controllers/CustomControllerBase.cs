@@ -15,9 +15,9 @@ public class CustomControllerBase : ControllerBase
     internal ObjectResult UnauthorizedClient()
     {
         return StatusCode(StatusCodes.Status401Unauthorized,
-            new ModelStateDto { Errors = { "Not authorized" } });
+            new ModelStateDto { Errors = new List<string> { "Not authorized" } });
     }
 
     internal BadRequestObjectResult BadRequest(string errorText) =>
-        BadRequest(new ModelStateDto { Errors = { errorText } });
+        BadRequest(new ModelStateDto { Errors = new List<string> { errorText } });
 }
