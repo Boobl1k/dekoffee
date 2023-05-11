@@ -2,6 +2,7 @@
 using Main.Application.Interfaces;
 using Main.Application.Models;
 using Main.Dto;
+using Main.Dto.OrderProduct;
 using Main.Dto.Product;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +27,7 @@ public class CartController : CustomControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayProductDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayOrderProductDto>))]
     [HttpGet]
     public async Task<IActionResult> GetCart()
     {
@@ -36,7 +37,7 @@ public class CartController : CustomControllerBase
         if (await _cartService.CreateCartBuilder().WithProducts().GetCart(user.Id) is not { } cart)
             return NotFound();
 
-        return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(cart.Products));
+        return Ok(cart.Products.Select(DisplayOrderProductDto.FromEntity));
     }
 
     [Produces(MediaTypeNames.Application.Json)]
@@ -52,7 +53,7 @@ public class CartController : CustomControllerBase
         if (await _productService.GetProduct(id) is not { } product)
             return NotFound();
 
-        if (await _cartService.AddProductToCart(user.Id, product) is null)
+        if (await _cartService.AddProductToCart(user.Id, new CartProduct(product)) is null)
             throw new Exception("Cannot add Product");
 
         return StatusCode(StatusCodes.Status201Created, product.Id);

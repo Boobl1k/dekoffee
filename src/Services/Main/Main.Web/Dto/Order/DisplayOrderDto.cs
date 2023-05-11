@@ -1,4 +1,5 @@
-﻿using Main.Dto.Product;
+﻿using Main.Dto.OrderProduct;
+using Main.Dto.Product;
 
 namespace Main.Dto.Order;
 
@@ -6,10 +7,21 @@ public class DisplayOrderDto
 {
     public Guid Id { get; set; }
     public string FullAddress { get; set; } = null!;
-    public string? CourierName { get; set; }
+    public string? ExecutorName { get; set; }
     public DateTime CreationTime { get; set; }
     public double TotalSum { get; set; }
     public string Status { get; set; } = null!;
 
-    public List<ProductDto> Products { get; set; } = null!;
+    public IEnumerable<DisplayOrderProductDto> Products { get; set; } = null!;
+
+    public static DisplayOrderDto FromEntity(Application.Models.Order entity) => new()
+    {
+        ExecutorName = entity.Executor?.UserName,
+        CreationTime = entity.CreationTime,
+        FullAddress = entity.Address.ToString(),
+        Id = entity.Id,
+        Products = entity.Products.Select(DisplayOrderProductDto.FromEntity),
+        Status = Application.Models.Order.GetStatusString(entity.Status),
+        TotalSum = entity.TotalSum
+    };
 }

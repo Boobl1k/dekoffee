@@ -1,6 +1,9 @@
-﻿namespace Main.Dto.Order;
+﻿using System.ComponentModel.DataAnnotations;
+using Main.Application.Models;
+
+namespace Main.Dto.Order;
 
 public class UpdateOrderStatusDto
 {
-    public int OrderStatus { get; set; }
+    [EnumDataType(typeof(OrderStatus))] public string OrderStatus { get; set; } = null!;
 }

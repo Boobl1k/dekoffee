@@ -8,7 +8,7 @@ namespace Main.Services;
 public class AddressService : IAddressService, IAddressBuilder
 {
     private readonly AppDbContext _dbContext;
-    private IQueryable<Address> _query;
+    private readonly IQueryable<Address> _query;
 
     public AddressService(AppDbContext dbContext)
     {
@@ -27,6 +27,15 @@ public class AddressService : IAddressService, IAddressBuilder
         return await GetAddress(address.Id);
     }
 
+    public async Task<Address?> CreateAddressForUser(Address address, User user)
+    {
+        _dbContext.Addresses.Add(address);
+        user.Addresses.Add(address);
+
+        await _dbContext.SaveChangesAsync();
+        return await GetAddress(address.Id);
+    }
+
     public async Task<Address> UpdateAddress(Address address)
     {
         _dbContext.Addresses.Update(address);
@@ -42,12 +51,6 @@ public class AddressService : IAddressService, IAddressBuilder
     }
 
     public IAddressBuilder CreateAddressBuilder() => this;
-
-    public IAddressBuilder WithUser()
-    {
-        _query = _query.Include(a => a.User);
-        return this;
-    }
 
     public async Task<Address?> GetAddress(Guid id) =>
         await _query.FirstOrDefaultAsync(a => a.Id == id);

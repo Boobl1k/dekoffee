@@ -8,31 +8,24 @@ namespace Main.Services;
 public class CartService : ICartService, ICartBuilder
 {
     private readonly AppDbContext _dbContext;
-    private IQueryable<Cart> _query;
+    private IQueryable<User> _query;
 
     public CartService(AppDbContext dbContext)
     {
         _dbContext = dbContext;
-        _query = dbContext.Carts;
+        _query = dbContext.Users.Include(u => u.Cart);
     }
 
-    public async Task<Cart?> CreateCart(Cart cart)
-    {
-        _dbContext.Carts.Add(cart);
-        await _dbContext.SaveChangesAsync();
-
-        return await GetCart(cart.Id);
-    }
-
-    public async Task<Product?> AddProductToCart(Guid userId, Product product)
+    public async Task<CartProduct?> AddProductToCart(Guid userId, CartProduct product)
     {
         var cart = await CreateCartBuilder().WithProducts().GetCart(userId) ?? throw new Exception("Not logged in");
 
         cart.Products.Add(product);
-        cart.TotalSum += product.Price;
+        cart.TotalSum += product.Product.Price * product.Count;
         await _dbContext.SaveChangesAsync();
 
-        var lastItem = (await GetCart(cart.Id) ?? throw new Exception("No such cart")).Products
+        var lastItem = (await CreateCartBuilder().WithProducts().GetCart(userId) ?? throw new Exception("No such cart"))
+            .Products
             .LastOrDefault();
         return lastItem == null || lastItem != product ? null : lastItem;
     }
@@ -45,7 +38,7 @@ public class CartService : ICartService, ICartBuilder
 
         var product = cart.Products[index];
         cart.Products.RemoveAt(index);
-        cart.TotalSum -= product.Price;
+        cart.TotalSum -= product.TotalPrice;
         await _dbContext.SaveChangesAsync();
     }
 
@@ -63,10 +56,10 @@ public class CartService : ICartService, ICartBuilder
 
     public ICartBuilder WithProducts()
     {
-        _query = _query.Include(c => c.Products);
+        _query = _query.Include(c => c.Cart.Products);
         return this;
     }
 
     public async Task<Cart?> GetCart(Guid id) =>
-        await _query.FirstOrDefaultAsync(c => c.Id == id);
+        await _query.Where(u => u.Id == id).Select(u => u.Cart).FirstOrDefaultAsync();
 }

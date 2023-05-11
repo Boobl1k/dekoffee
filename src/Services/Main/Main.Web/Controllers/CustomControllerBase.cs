@@ -1,17 +1,10 @@
-﻿using AutoMapper;
-using Main.Dto;
+﻿using Main.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
 
 public class CustomControllerBase : ControllerBase
 {
-    private IMapper? _mapper;
-
-    protected IMapper Mapper =>
-        (_mapper ??= HttpContext.RequestServices.GetService<IMapper>()) ??
-        throw new InvalidOperationException("AutoMapper is null");
-
     internal ObjectResult UnauthorizedClient()
     {
         return StatusCode(StatusCodes.Status401Unauthorized,

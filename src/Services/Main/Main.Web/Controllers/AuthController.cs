@@ -20,15 +20,13 @@ public class AuthController : CustomControllerBase
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly IUserService<User> _userService;
-    private readonly ICartService _cartService;
 
     public AuthController(UserManager<User> userManager, SignInManager<User> signInManager,
-        IUserService<User> userService, ICartService cartService)
+        IUserService<User> userService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _userService = userService;
-        _cartService = cartService;
     }
 
     [Produces(MediaTypeNames.Application.Json)]
@@ -40,24 +38,20 @@ public class AuthController : CustomControllerBase
     public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
     {
         if (!ModelState.IsValid) return BadRequest();
-        
+
         if (await _userService.ValidateCredentials(registerUserDto.Email, checkPassword: false))
             return BadRequest("User with same Email already exists");
 
         if (registerUserDto.Password != registerUserDto.RepeatPassword)
             return BadRequest("Mismatch of passwords");
-        
-        var guid = Guid.NewGuid();
-        var user = Mapper.Map<User>(registerUserDto);
-        user.Id = guid;
+
+        var user = new User(registerUserDto.Email, registerUserDto.Email, new Cart());
 
         var result = await _userManager.CreateAsync(user, registerUserDto.Password);
         if (!result.Succeeded)
             return StatusCode(StatusCodes.Status403Forbidden,
                 new ModelStateDto { Errors = result.Errors.Select(e => e.Description).ToList() });
 
-        if (await _cartService.CreateCart(new Cart { Id = guid }) is null)
-            throw new Exception("Cart is not created");
         return StatusCode(StatusCodes.Status201Created, user.Id);
     }
 
@@ -78,7 +72,7 @@ public class AuthController : CustomControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
         var request = HttpContext.GetOpenIddictServerRequest() ?? throw new Exception("OpenIdDict config is wrong");
-        if (!await _userService.ValidateCredentials(userDto.Email, userDto.Password, true))
+        if (!await _userService.ValidateCredentials(userDto.username, userDto.password, true))
             return Forbid(new AuthenticationProperties(new Dictionary<string, string?>
             {
                 [OpenIddictServerAspNetCoreConstants.Properties.Error] = OpenIddictConstants.Errors.InvalidGrant,
@@ -88,7 +82,7 @@ public class AuthController : CustomControllerBase
 
         var userPrincipal =
             await _signInManager.CreateUserPrincipalAsync((await _userService.CreateUserBuilder()
-                .FindByEmail(userDto.Email))!);
+                .FindByEmail(userDto.username))!);
         userPrincipal.SetScopes(new[]
         {
             OpenIddictConstants.Permissions.Scopes.Email,
