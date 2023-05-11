@@ -26,7 +26,7 @@ public class Order
     public DateTime? CompleteTime { get; set; }
     public DateTime LastUpdateTime { get; set; }
     public OrderStatus Status { get; set; } = OrderStatus.Created;
-    public double TotalSum { get; set; }
+    public decimal TotalSum { get; set; }
     private Address? _address;
 
     public Address Address
@@ -59,7 +59,7 @@ public class Order
     {
     }
 
-    public Order(DateTime deadlineTime, DateTime lowerSelectedTime, DateTime upperSelectedTime, double totalSum,
+    public Order(DateTime deadlineTime, DateTime lowerSelectedTime, DateTime upperSelectedTime, decimal totalSum,
         Address address, User user, List<OrderProduct> products)
     {
         DeadlineTime = deadlineTime;

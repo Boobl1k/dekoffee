@@ -6,7 +6,6 @@ namespace Main.Application.Models;
 [Owned]
 public class Cart
 {
-    public decimal TotalSum { get; set; }
     private List<CartProduct>? _products;
 
     public List<CartProduct> Products
@@ -20,9 +19,8 @@ public class Cart
     {
     }
 
-    public Cart(decimal totalSum = 0, List<CartProduct>? products = null)
+    public Cart(List<CartProduct>? products = null)
     {
-        TotalSum = totalSum;
         Products = products ?? new List<CartProduct>();
     }
 }

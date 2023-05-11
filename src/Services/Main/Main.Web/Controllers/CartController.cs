@@ -27,17 +27,17 @@ public class CartController : CustomControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayOrderProductDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayCountedProductDto>))]
     [HttpGet]
     public async Task<IActionResult> GetCart()
     {
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
             return BadRequest();
 
-        if (await _cartService.CreateCartBuilder().WithProducts().GetCart(user.Id) is not { } cart)
+        if (await _cartService.CreateCartBuilder().WithProducts().GetUserWithCart(user.Id) is not { } userWithCart)
             return NotFound();
 
-        return Ok(cart.Products.Select(DisplayOrderProductDto.FromEntity));
+        return Ok(userWithCart.Cart.Products.Select(DisplayCountedProductDto.FromEntity));
     }
 
     [Produces(MediaTypeNames.Application.Json)]

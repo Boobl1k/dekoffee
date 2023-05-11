@@ -18,13 +18,13 @@ public class CartService : ICartService, ICartBuilder
 
     public async Task<CartProduct?> AddProductToCart(Guid userId, CartProduct product)
     {
-        var cart = await CreateCartBuilder().WithProducts().GetCart(userId) ?? throw new Exception("Not logged in");
+        var user = await CreateCartBuilder().WithProducts().GetUserWithCart(userId) ?? throw new Exception("Not logged in");
 
-        cart.Products.Add(product);
-        cart.TotalSum += product.Product.Price * product.Count;
+        user.Cart.Products.Add(product);
         await _dbContext.SaveChangesAsync();
 
-        var lastItem = (await CreateCartBuilder().WithProducts().GetCart(userId) ?? throw new Exception("No such cart"))
+        var lastItem = (await CreateCartBuilder().WithProducts().GetUserWithCart(userId) ?? throw new Exception("No such cart"))
+            .Cart
             .Products
             .LastOrDefault();
         return lastItem == null || lastItem != product ? null : lastItem;
@@ -32,34 +32,37 @@ public class CartService : ICartService, ICartBuilder
 
     public async Task RemoveProductFromCart(Guid id, int index)
     {
-        var cart = await CreateCartBuilder().WithProducts().GetCart(id) ?? throw new Exception("Not logged in");
-        if (cart.Products.Count <= index)
+        var user = await CreateCartBuilder().WithProducts().GetUserWithCart(id) ?? throw new Exception("Not logged in");
+        if (user.Cart.Products.Count <= index)
             throw new ArgumentOutOfRangeException();
 
-        var product = cart.Products[index];
-        cart.Products.RemoveAt(index);
-        cart.TotalSum -= product.TotalPrice;
+        user.Cart.Products.RemoveAt(index);
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task ClearCart(Guid id)
     {
-        if (await CreateCartBuilder().WithProducts().GetCart(id) is not { } cart)
+        if (await CreateCartBuilder().WithProducts().GetUserWithCart(id) is not { } user)
             throw new Exception("Not logged in");
 
-        cart.Products.Clear();
-        cart.TotalSum = 0;
+        user.Cart.Products.Clear();
         await _dbContext.SaveChangesAsync();
     }
 
     public ICartBuilder CreateCartBuilder() => this;
 
-    public ICartBuilder WithProducts()
+    public ICartBuilder WithCartProducts()
     {
         _query = _query.Include(c => c.Cart.Products);
         return this;
     }
 
-    public async Task<Cart?> GetCart(Guid id) =>
-        await _query.Where(u => u.Id == id).Select(u => u.Cart).FirstOrDefaultAsync();
+    public ICartBuilder WithProducts()
+    {
+        _query = _query.Include(u => u.Cart).ThenInclude(c => c.Products).ThenInclude(p => p.Product);
+        return this;
+    }
+
+    public async Task<User?> GetUserWithCart(Guid id) =>
+        await _query.Where(u => u.Id == id).FirstOrDefaultAsync();
 }

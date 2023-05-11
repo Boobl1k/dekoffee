@@ -35,7 +35,6 @@ namespace Main.Infrastructure.Migrations
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
-                    Cart_TotalSum = table.Column<decimal>(type: "numeric", nullable: false),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
@@ -106,7 +105,7 @@ namespace Main.Infrastructure.Migrations
                     Description = table.Column<string>(type: "text", nullable: true),
                     Net = table.Column<double>(type: "double precision", nullable: false),
                     Gross = table.Column<double>(type: "double precision", nullable: false),
-                    Country = table.Column<string>(type: "text", nullable: true),
+                    Country = table.Column<string>(type: "text", nullable: false),
                     EnergyValue = table.Column<double>(type: "double precision", nullable: false),
                     IsBlocked = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -306,7 +305,7 @@ namespace Main.Infrastructure.Migrations
                     CompleteTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LastUpdateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    TotalSum = table.Column<double>(type: "double precision", nullable: false),
+                    TotalSum = table.Column<decimal>(type: "numeric", nullable: false),
                     AddressId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ExecutorId = table.Column<Guid>(type: "uuid", nullable: true)
@@ -367,24 +366,24 @@ namespace Main.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderProducts",
+                name: "OrderProduct",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: true),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Count = table.Column<int>(type: "integer", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Count = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderProducts", x => x.Id);
+                    table.PrimaryKey("PK_OrderProduct", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderProducts_Orders_OrderId",
+                        name: "FK_OrderProduct_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_OrderProducts_Products_ProductId",
+                        name: "FK_OrderProduct_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -477,13 +476,13 @@ namespace Main.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderProducts_OrderId",
-                table: "OrderProducts",
+                name: "IX_OrderProduct_OrderId",
+                table: "OrderProduct",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderProducts_ProductId",
-                table: "OrderProducts",
+                name: "IX_OrderProduct_ProductId",
+                table: "OrderProduct",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -530,7 +529,7 @@ namespace Main.Infrastructure.Migrations
                 name: "OpenIddictTokens");
 
             migrationBuilder.DropTable(
-                name: "OrderProducts");
+                name: "OrderProduct");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

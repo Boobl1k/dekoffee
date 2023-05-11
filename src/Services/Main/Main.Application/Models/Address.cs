@@ -38,5 +38,5 @@ public class Address
 
     public override string ToString() =>
         $"г. {City}, ул. {Street} д. {House}" +
-        (Section is not null ? $", п. ${Section}, эт. {Floor}, кв. {Apartment}" : null);
+        (Section is not null ? $", п. {Section}, эт. {Floor}, кв. {Apartment}" : null);
 }

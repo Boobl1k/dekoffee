@@ -12,6 +12,9 @@ public class Product
     public double Net { get; set; }
     public double Gross { get; set; }
     public string Country { get; set; }
+    /// <summary>
+    /// Energy value per 100 gram
+    /// </summary>
     public double EnergyValue { get; set; }
     public bool IsBlocked { get; set; }
 
