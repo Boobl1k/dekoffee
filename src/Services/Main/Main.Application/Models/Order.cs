@@ -77,7 +77,7 @@ public class Order
         status switch
         {
             OrderStatus.Created => "Создан",
-            OrderStatus.Accepted => "Обрабатывается",
+            OrderStatus.Accepted => "Принят",
             OrderStatus.Cooking => "Готовится",
             OrderStatus.Packed => "Собран",
             OrderStatus.InDelivery => "В доставке",
