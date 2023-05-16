@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
 using Main.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Main.Application.Models;
 
@@ -15,7 +14,6 @@ public enum OrderStatus
     Canceled
 }
 
-[PrimaryKey(nameof(Id))]
 public class Order
 {
     public Guid Id { get; } = Guid.NewGuid();

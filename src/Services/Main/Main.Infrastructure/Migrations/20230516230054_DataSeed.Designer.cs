@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Main.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230511231803_DataSeed")]
+    [Migration("20230516230054_DataSeed")]
     partial class DataSeed
     {
         /// <inheritdoc />
@@ -60,7 +60,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.Address", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Apartment")
@@ -127,7 +126,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AddressId")
@@ -213,7 +211,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Country")
@@ -384,7 +381,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
@@ -465,7 +461,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@DEFOFF.EE",
                             NormalizedUserName = "АДМИН",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEdv+JMOKEDbakeNbAS/QieLKZT24Kvtc/YGlAnypJ9QG6VVEuPE2Y1WReFODB5WWQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL2uqcJoPLAhCgVbiS7eSJP7k3KP+mKYyMYphy7qEhISToFUOp8TwA8E6dG1PjtqqQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -482,7 +478,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADEL@DEFOFF.EE",
                             NormalizedUserName = "БАРИСТА_АДЕЛЬ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAnf/M+1KULXEqL0dkYbsSwiWxdvIgAb/kn6HP8nkezW0QfexXUeizxVz+APrVNEFw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN9vIszn3vMDBijPE09ncS4sIfSz3/QJVQ64CtX//yV2kEO4O9zaHcw/GcJqGxmKHA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -499,7 +495,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "COURIER.DMITRY@DEFOFF.EE",
                             NormalizedUserName = "КУРЬЕР_ДМИТРИЙ",
-                            PasswordHash = "AQAAAAIAAYagAAAAECAStJSJm/Yw+k5NrgqSzXpuXYfzw8i0OZEYicLbxxPACzmCpSQiJUpB7LFjumVbgQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFP61C1SSl6cxkWDLo/6AuUA3YF/J0ENRCbdtoiRt4arfm1gGY3mCzvcd9PQQF896g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -516,7 +512,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "COURIER.RUSLAN@DEFOFF.EE",
                             NormalizedUserName = "КУРЬЕР_РУСЛАН",
-                            PasswordHash = "AQAAAAIAAYagAAAAELGRekou0GmhEXPM8dTrLk9jh5GUMHxaMkgiNwJAVClMmOVAxyHEItgX8+S3xAgdsw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGJtq/sjFcy7hNQZrxk4afWyTMSLgtPM4F4S0fVgfJvRFs52aTHLWmM+HPamnp8B1A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -533,7 +529,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "MANSUR@EMA.IL",
                             NormalizedUserName = "МАНСУР",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOWaKooVnXT/abA8ESeYN/9DRJSDMrwLPQiiHKVtMxLTanSvuLLuuJvbSx+3vaXHsw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENmUGtwOY7Ut9EUiAUxQyDMKbUrImirmDpv18CwWGO++XSp19PwN65tTRi0DfLiw3Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -550,7 +546,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "DAMIR@EMA.IL",
                             NormalizedUserName = "ДАМИР",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIwc7sj8Kel0+TNBZqALQAEDAufWXZlLFPnD96IT6TIx+EYx9gFFthT9JVodJStb1A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEEOVIjCLuRoF3iESCH5PTC3eADekDi26kEcCHkzH0z61UvFg6oCDNCuyO7ppzJlFg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -561,7 +557,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -602,10 +597,7 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -626,10 +618,7 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -727,7 +716,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ClientId")
@@ -782,7 +770,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreAuthorization", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationId")
@@ -824,7 +811,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreScope", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyToken")
@@ -865,7 +851,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreToken", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationId")
@@ -980,22 +965,19 @@ namespace Main.Infrastructure.Migrations
 
                     b.OwnsMany("Main.Application.Models.OrderProduct", "Products", b1 =>
                         {
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
+                            b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .HasColumnType("integer");
 
                             b1.Property<int>("Count")
                                 .HasColumnType("integer");
 
-                            b1.Property<Guid?>("OrderId")
-                                .HasColumnType("uuid");
-
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
 
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("OrderId");
+                            b1.HasKey("OrderId", "Id");
 
                             b1.HasIndex("ProductId");
 
@@ -1015,30 +997,30 @@ namespace Main.Infrastructure.Migrations
                             b1.HasData(
                                 new
                                 {
-                                    Id = new Guid("a6bb28e4-5dde-4287-a3fd-e142744a5f6d"),
-                                    Count = 3,
                                     OrderId = new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14"),
+                                    Id = 1,
+                                    Count = 3,
                                     ProductId = new Guid("cfbd118c-51e4-4a29-9ddd-58777d85e0a3")
                                 },
                                 new
                                 {
-                                    Id = new Guid("0899a29e-3182-473f-a1ab-50010a4910fe"),
-                                    Count = 10000,
                                     OrderId = new Guid("6b75f65b-52c5-402f-a446-a6c8ef14af80"),
+                                    Id = 2,
+                                    Count = 10000,
                                     ProductId = new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e")
                                 },
                                 new
                                 {
-                                    Id = new Guid("77806ef8-ba69-4195-8251-dbf2cdd8683e"),
-                                    Count = 1,
                                     OrderId = new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14"),
+                                    Id = 3,
+                                    Count = 1,
                                     ProductId = new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e")
                                 },
                                 new
                                 {
-                                    Id = new Guid("a7a8f222-267b-45ce-b7c0-f3463e689a25"),
-                                    Count = 1,
                                     OrderId = new Guid("964d25df-c2ac-4511-b43f-6588394afd52"),
+                                    Id = 4,
+                                    Count = 1,
                                     ProductId = new Guid("71755a93-7c3f-4137-bb5d-11c8b4539556")
                                 });
                         });
@@ -1070,12 +1052,14 @@ namespace Main.Infrastructure.Migrations
 
                             b1.OwnsMany("Main.Application.Models.CartProduct", "Products", b2 =>
                                 {
-                                    b2.Property<Guid>("Id")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("uuid");
-
                                     b2.Property<Guid>("CartUserId")
                                         .HasColumnType("uuid");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b2.Property<int>("Id"));
 
                                     b2.Property<int>("Count")
                                         .HasColumnType("integer");
@@ -1083,9 +1067,7 @@ namespace Main.Infrastructure.Migrations
                                     b2.Property<Guid>("ProductId")
                                         .HasColumnType("uuid");
 
-                                    b2.HasKey("Id");
-
-                                    b2.HasIndex("CartUserId");
+                                    b2.HasKey("CartUserId", "Id");
 
                                     b2.HasIndex("ProductId");
 
@@ -1105,15 +1087,15 @@ namespace Main.Infrastructure.Migrations
                                     b2.HasData(
                                         new
                                         {
-                                            Id = new Guid("c7f42ca1-40e9-4e25-bb21-59197e42edf1"),
                                             CartUserId = new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"),
+                                            Id = 1,
                                             Count = 2,
                                             ProductId = new Guid("71755a93-7c3f-4137-bb5d-11c8b4539556")
                                         },
                                         new
                                         {
-                                            Id = new Guid("6395e1e5-0bff-4182-9a21-cb0fb9a7159e"),
                                             CartUserId = new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"),
+                                            Id = 2,
                                             Count = 1,
                                             ProductId = new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e")
                                         });

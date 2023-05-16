@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Main.Application.Models;
 
-namespace Main.Application.Models;
-
-[Owned]
 public class OrderProduct : CountedProduct
 {
     // ReSharper disable once UnusedMember.Local

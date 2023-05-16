@@ -1,9 +1,7 @@
 ﻿using Main.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Main.Application.Models;
 
-[Owned]
 public class Cart
 {
     private List<CartProduct>? _products;

@@ -81,28 +81,28 @@ internal static class OrderSeed
             OrderId = KremlevskayaId.ToGuid(),
             ProductId = ProductSeed.AmericanoId.ToGuid(),
             Count = 3,
-            Id = "A6BB28E4-5DDE-4287-A3FD-E142744A5F6D".ToGuid()
+            Id = 1
         };
         yield return new
         {
             OrderId = DamirId.ToGuid(),
             ProductId = ProductSeed.LatteId.ToGuid(),
             Count = 10000,
-            Id = "0899A29E-3182-473F-A1AB-50010A4910FE".ToGuid()
+            Id = 2
         };
         yield return new
         {
             OrderId = KremlevskayaId.ToGuid(),
             ProductId = ProductSeed.LatteId.ToGuid(),
             Count = 1,
-            Id = "77806EF8-BA69-4195-8251-DBF2CDD8683E".ToGuid()
+            Id = 3
         };
         yield return new
         {
             OrderId = DekoId.ToGuid(),
             ProductId = ProductSeed.CappuccinoId.ToGuid(),
             Count = 1,
-            Id = "A7A8F222-267B-45CE-B7C0-F3463E689A25".ToGuid()
+            Id = 4
         };
     }
 }

@@ -34,7 +34,7 @@ internal static class UserSeed
             UserName = "Админ",
             NormalizedUserName = "АДМИН",
             Email = "admin@dekoff.ee",
-            NormalizedEmail = "ADMIN@DEFOFF.EE",
+            NormalizedEmail = "ADMIN@DEKOFF.EE",
             EmailConfirmed = true,
             PasswordHash = new PasswordHasher<User>().HashPassword(null!, "admin-pass"),
             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
@@ -53,7 +53,7 @@ internal static class UserSeed
             UserName = "Бариста_Адель",
             NormalizedUserName = "БАРИСТА_АДЕЛЬ",
             Email = "adel@dekoff.ee",
-            NormalizedEmail = "ADEL@DEFOFF.EE",
+            NormalizedEmail = "ADEL@DEKOFF.EE",
             EmailConfirmed = true,
             PasswordHash = new PasswordHasher<User>().HashPassword(null!, "adel-pass"),
             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
@@ -72,7 +72,7 @@ internal static class UserSeed
             UserName = "Курьер_Дмитрий",
             NormalizedUserName = "КУРЬЕР_ДМИТРИЙ",
             Email = "courier.dmitry@dekoff.ee",
-            NormalizedEmail = "COURIER.DMITRY@DEFOFF.EE",
+            NormalizedEmail = "COURIER.DMITRY@DEKOFF.EE",
             EmailConfirmed = true,
             PasswordHash = new PasswordHasher<User>().HashPassword(null!, "dmitry-pass"),
             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
@@ -91,7 +91,7 @@ internal static class UserSeed
             UserName = "Курьер_Руслан",
             NormalizedUserName = "КУРЬЕР_РУСЛАН",
             Email = "courier.ruslan@dekoff.ee",
-            NormalizedEmail = "COURIER.RUSLAN@DEFOFF.EE",
+            NormalizedEmail = "COURIER.RUSLAN@DEKOFF.EE",
             EmailConfirmed = true,
             PasswordHash = new PasswordHasher<User>().HashPassword(null!, "ruslan-pass"),
             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
@@ -196,14 +196,14 @@ internal static class UserSeed
             CartUserId = MansurId.ToGuid(),
             ProductId = ProductSeed.CappuccinoId.ToGuid(),
             Count = 2,
-            Id = "C7F42CA1-40E9-4E25-BB21-59197E42EDF1".ToGuid()
+            Id = 1
         };
         yield return new
         {
             CartUserId = MansurId.ToGuid(),
             ProductId = ProductSeed.LatteId.ToGuid(),
             Count = 1,
-            Id = "6395E1E5-0BFF-4182-9A21-CB0FB9A7159E".ToGuid()
+            Id = 2
         };
     }
 }

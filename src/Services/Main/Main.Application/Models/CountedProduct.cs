@@ -1,12 +1,9 @@
 ﻿using Main.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Main.Application.Models;
 
-[PrimaryKey(nameof(Id))]
 public abstract class CountedProduct
 {
-    public Guid Id { get; } = Guid.NewGuid();
     private readonly Product? _product;
     public Product Product
     {

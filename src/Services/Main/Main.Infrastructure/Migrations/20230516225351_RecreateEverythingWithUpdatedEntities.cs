@@ -118,8 +118,7 @@ namespace Main.Infrastructure.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     RoleId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
@@ -163,8 +162,7 @@ namespace Main.Infrastructure.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
@@ -272,14 +270,15 @@ namespace Main.Infrastructure.Migrations
                 name: "CartProduct",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CartUserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     Count = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CartProduct", x => x.Id);
+                    table.PrimaryKey("PK_CartProduct", x => new { x.CartUserId, x.Id });
                     table.ForeignKey(
                         name: "FK_CartProduct_AspNetUsers_CartUserId",
                         column: x => x.CartUserId,
@@ -369,19 +368,20 @@ namespace Main.Infrastructure.Migrations
                 name: "OrderProduct",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: true),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     Count = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderProduct", x => x.Id);
+                    table.PrimaryKey("PK_OrderProduct", x => new { x.OrderId, x.Id });
                     table.ForeignKey(
                         name: "FK_OrderProduct_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderProduct_Products_ProductId",
                         column: x => x.ProductId,
@@ -433,11 +433,6 @@ namespace Main.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartProduct_CartUserId",
-                table: "CartProduct",
-                column: "CartUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CartProduct_ProductId",
                 table: "CartProduct",
                 column: "ProductId");
@@ -474,11 +469,6 @@ namespace Main.Infrastructure.Migrations
                 table: "OpenIddictTokens",
                 column: "ReferenceId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderProduct_OrderId",
-                table: "OrderProduct",
-                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderProduct_ProductId",

@@ -17,10 +17,6 @@ namespace Main.Infrastructure.Migrations
                 name: "FK_Addresses_AspNetUsers_UserId",
                 table: "Addresses");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_OrderProduct_Orders_OrderId",
-                table: "OrderProduct");
-
             migrationBuilder.DropIndex(
                 name: "IX_Addresses_UserId",
                 table: "Addresses");
@@ -77,12 +73,12 @@ namespace Main.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsBlocked", "IsDeleted", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 0, null, "mansur@ema.il", true, false, false, true, null, "MANSUR@EMA.IL", "МАНСУР", "AQAAAAIAAYagAAAAEOWaKooVnXT/abA8ESeYN/9DRJSDMrwLPQiiHKVtMxLTanSvuLLuuJvbSx+3vaXHsw==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Мансур" },
-                    { new Guid("1799c9f1-e377-45fe-8858-d909d0c2f7a7"), 0, null, "adel@dekoff.ee", true, false, false, true, null, "ADEL@DEFOFF.EE", "БАРИСТА_АДЕЛЬ", "AQAAAAIAAYagAAAAEAnf/M+1KULXEqL0dkYbsSwiWxdvIgAb/kn6HP8nkezW0QfexXUeizxVz+APrVNEFw==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Бариста_Адель" },
-                    { new Guid("780c9e97-6564-4a35-8195-9544ba50d904"), 0, null, "damir@ema.il", true, false, false, true, null, "DAMIR@EMA.IL", "ДАМИР", "AQAAAAIAAYagAAAAEIwc7sj8Kel0+TNBZqALQAEDAufWXZlLFPnD96IT6TIx+EYx9gFFthT9JVodJStb1A==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Дамир" },
-                    { new Guid("a969812b-4fc3-4ffc-b739-2a467117f64e"), 0, null, "courier.dmitry@dekoff.ee", true, false, false, true, null, "COURIER.DMITRY@DEFOFF.EE", "КУРЬЕР_ДМИТРИЙ", "AQAAAAIAAYagAAAAECAStJSJm/Yw+k5NrgqSzXpuXYfzw8i0OZEYicLbxxPACzmCpSQiJUpB7LFjumVbgQ==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Курьер_Дмитрий" },
-                    { new Guid("b1f872ed-1a8b-4d71-8694-e9273287f8ec"), 0, null, "courier.ruslan@dekoff.ee", true, false, false, true, null, "COURIER.RUSLAN@DEFOFF.EE", "КУРЬЕР_РУСЛАН", "AQAAAAIAAYagAAAAELGRekou0GmhEXPM8dTrLk9jh5GUMHxaMkgiNwJAVClMmOVAxyHEItgX8+S3xAgdsw==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Курьер_Руслан" },
-                    { new Guid("e58a4734-d89c-48eb-a65d-e0e192bdda7c"), 0, null, "admin@dekoff.ee", true, false, false, true, null, "ADMIN@DEFOFF.EE", "АДМИН", "AQAAAAIAAYagAAAAEEdv+JMOKEDbakeNbAS/QieLKZT24Kvtc/YGlAnypJ9QG6VVEuPE2Y1WReFODB5WWQ==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Админ" }
+                    { new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 0, null, "mansur@ema.il", true, false, false, true, null, "MANSUR@EMA.IL", "МАНСУР", "AQAAAAIAAYagAAAAENmUGtwOY7Ut9EUiAUxQyDMKbUrImirmDpv18CwWGO++XSp19PwN65tTRi0DfLiw3Q==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Мансур" },
+                    { new Guid("1799c9f1-e377-45fe-8858-d909d0c2f7a7"), 0, null, "adel@dekoff.ee", true, false, false, true, null, "ADEL@DEFOFF.EE", "БАРИСТА_АДЕЛЬ", "AQAAAAIAAYagAAAAEN9vIszn3vMDBijPE09ncS4sIfSz3/QJVQ64CtX//yV2kEO4O9zaHcw/GcJqGxmKHA==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Бариста_Адель" },
+                    { new Guid("780c9e97-6564-4a35-8195-9544ba50d904"), 0, null, "damir@ema.il", true, false, false, true, null, "DAMIR@EMA.IL", "ДАМИР", "AQAAAAIAAYagAAAAEEEOVIjCLuRoF3iESCH5PTC3eADekDi26kEcCHkzH0z61UvFg6oCDNCuyO7ppzJlFg==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Дамир" },
+                    { new Guid("a969812b-4fc3-4ffc-b739-2a467117f64e"), 0, null, "courier.dmitry@dekoff.ee", true, false, false, true, null, "COURIER.DMITRY@DEFOFF.EE", "КУРЬЕР_ДМИТРИЙ", "AQAAAAIAAYagAAAAEFP61C1SSl6cxkWDLo/6AuUA3YF/J0ENRCbdtoiRt4arfm1gGY3mCzvcd9PQQF896g==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Курьер_Дмитрий" },
+                    { new Guid("b1f872ed-1a8b-4d71-8694-e9273287f8ec"), 0, null, "courier.ruslan@dekoff.ee", true, false, false, true, null, "COURIER.RUSLAN@DEFOFF.EE", "КУРЬЕР_РУСЛАН", "AQAAAAIAAYagAAAAEGJtq/sjFcy7hNQZrxk4afWyTMSLgtPM4F4S0fVgfJvRFs52aTHLWmM+HPamnp8B1A==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Курьер_Руслан" },
+                    { new Guid("e58a4734-d89c-48eb-a65d-e0e192bdda7c"), 0, null, "admin@dekoff.ee", true, false, false, true, null, "ADMIN@DEFOFF.EE", "АДМИН", "AQAAAAIAAYagAAAAEL2uqcJoPLAhCgVbiS7eSJP7k3KP+mKYyMYphy7qEhISToFUOp8TwA8E6dG1PjtqqQ==", null, false, "18D6AB4E-F06A-4458-B24F-33DCC663BAC9", false, "Админ" }
                 });
 
             migrationBuilder.InsertData(
@@ -126,11 +122,11 @@ namespace Main.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "CartProduct",
-                columns: new[] { "Id", "CartUserId", "Count", "ProductId" },
+                columns: new[] { "CartUserId", "Id", "Count", "ProductId" },
                 values: new object[,]
                 {
-                    { new Guid("6395e1e5-0bff-4182-9a21-cb0fb9a7159e"), new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 1, new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e") },
-                    { new Guid("c7f42ca1-40e9-4e25-bb21-59197e42edf1"), new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 2, new Guid("71755a93-7c3f-4137-bb5d-11c8b4539556") }
+                    { new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 1, 2, new Guid("71755a93-7c3f-4137-bb5d-11c8b4539556") },
+                    { new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 2, 1, new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e") }
                 });
 
             migrationBuilder.InsertData(
@@ -145,35 +141,24 @@ namespace Main.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "OrderProduct",
-                columns: new[] { "Id", "Count", "OrderId", "ProductId" },
+                columns: new[] { "Id", "OrderId", "Count", "ProductId" },
                 values: new object[,]
                 {
-                    { new Guid("0899a29e-3182-473f-a1ab-50010a4910fe"), 10000, new Guid("6b75f65b-52c5-402f-a446-a6c8ef14af80"), new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e") },
-                    { new Guid("77806ef8-ba69-4195-8251-dbf2cdd8683e"), 1, new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14"), new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e") },
-                    { new Guid("a6bb28e4-5dde-4287-a3fd-e142744a5f6d"), 3, new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14"), new Guid("cfbd118c-51e4-4a29-9ddd-58777d85e0a3") },
-                    { new Guid("a7a8f222-267b-45ce-b7c0-f3463e689a25"), 1, new Guid("964d25df-c2ac-4511-b43f-6588394afd52"), new Guid("71755a93-7c3f-4137-bb5d-11c8b4539556") }
+                    { 2, new Guid("6b75f65b-52c5-402f-a446-a6c8ef14af80"), 10000, new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e") },
+                    { 4, new Guid("964d25df-c2ac-4511-b43f-6588394afd52"), 1, new Guid("71755a93-7c3f-4137-bb5d-11c8b4539556") },
+                    { 1, new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14"), 3, new Guid("cfbd118c-51e4-4a29-9ddd-58777d85e0a3") },
+                    { 3, new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14"), 1, new Guid("8ba706ab-387f-41d4-9fa0-9f419bc0793e") }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AddressUser_UserId",
                 table: "AddressUser",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_OrderProduct_Orders_OrderId",
-                table: "OrderProduct",
-                column: "OrderId",
-                principalTable: "Orders",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_OrderProduct_Orders_OrderId",
-                table: "OrderProduct");
-
             migrationBuilder.DropTable(
                 name: "AddressUser");
 
@@ -199,33 +184,33 @@ namespace Main.Infrastructure.Migrations
 
             migrationBuilder.DeleteData(
                 table: "CartProduct",
-                keyColumn: "Id",
-                keyValue: new Guid("6395e1e5-0bff-4182-9a21-cb0fb9a7159e"));
+                keyColumns: new[] { "CartUserId", "Id" },
+                keyValues: new object[] { new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 1 });
 
             migrationBuilder.DeleteData(
                 table: "CartProduct",
-                keyColumn: "Id",
-                keyValue: new Guid("c7f42ca1-40e9-4e25-bb21-59197e42edf1"));
+                keyColumns: new[] { "CartUserId", "Id" },
+                keyValues: new object[] { new Guid("0c3a4ac7-6fa2-4aad-a576-48ef57b1c999"), 2 });
 
             migrationBuilder.DeleteData(
                 table: "OrderProduct",
-                keyColumn: "Id",
-                keyValue: new Guid("0899a29e-3182-473f-a1ab-50010a4910fe"));
+                keyColumns: new[] { "Id", "OrderId" },
+                keyValues: new object[] { 2, new Guid("6b75f65b-52c5-402f-a446-a6c8ef14af80") });
 
             migrationBuilder.DeleteData(
                 table: "OrderProduct",
-                keyColumn: "Id",
-                keyValue: new Guid("77806ef8-ba69-4195-8251-dbf2cdd8683e"));
+                keyColumns: new[] { "Id", "OrderId" },
+                keyValues: new object[] { 4, new Guid("964d25df-c2ac-4511-b43f-6588394afd52") });
 
             migrationBuilder.DeleteData(
                 table: "OrderProduct",
-                keyColumn: "Id",
-                keyValue: new Guid("a6bb28e4-5dde-4287-a3fd-e142744a5f6d"));
+                keyColumns: new[] { "Id", "OrderId" },
+                keyValues: new object[] { 1, new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14") });
 
             migrationBuilder.DeleteData(
                 table: "OrderProduct",
-                keyColumn: "Id",
-                keyValue: new Guid("a7a8f222-267b-45ce-b7c0-f3463e689a25"));
+                keyColumns: new[] { "Id", "OrderId" },
+                keyValues: new object[] { 3, new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14") });
 
             migrationBuilder.DeleteData(
                 table: "Products",
@@ -369,14 +354,6 @@ namespace Main.Infrastructure.Migrations
                 column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_OrderProduct_Orders_OrderId",
-                table: "OrderProduct",
-                column: "OrderId",
-                principalTable: "Orders",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
     }
 }

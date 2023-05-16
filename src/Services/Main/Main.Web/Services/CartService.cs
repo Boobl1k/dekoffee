@@ -53,7 +53,7 @@ public class CartService : ICartService, ICartBuilder
 
     public ICartBuilder WithCartProducts()
     {
-        _query = _query.Include(c => c.Cart.Products);
+        _query = _query.Include(u => u.Cart).ThenInclude(c => c.Products);
         return this;
     }
 

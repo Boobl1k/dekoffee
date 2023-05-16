@@ -87,6 +87,7 @@ public static class ProgramExtensions
                 action => action.MigrationsAssembly(typeof(AppDbContext).Assembly
                     .FullName));
             options.UseOpenIddict();
+            options.EnableSensitiveDataLogging();
         });
     }
 

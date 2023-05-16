@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Main.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230511231757_RecreateEverythingWithUpdatedEntities")]
+    [Migration("20230516225351_RecreateEverythingWithUpdatedEntities")]
     partial class RecreateEverythingWithUpdatedEntities
     {
         /// <inheritdoc />
@@ -28,7 +28,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.Address", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Apartment")
@@ -68,7 +67,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AddressId")
@@ -115,7 +113,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Country")
@@ -152,7 +149,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Main.Application.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
@@ -225,7 +221,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -252,10 +247,7 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -276,10 +268,7 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -355,7 +344,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ClientId")
@@ -410,7 +398,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreAuthorization", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationId")
@@ -452,7 +439,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreScope", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyToken")
@@ -493,7 +479,6 @@ namespace Main.Infrastructure.Migrations
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreToken", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationId")
@@ -590,22 +575,19 @@ namespace Main.Infrastructure.Migrations
 
                     b.OwnsMany("Main.Application.Models.OrderProduct", "Products", b1 =>
                         {
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
+                            b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .HasColumnType("integer");
 
                             b1.Property<int>("Count")
                                 .HasColumnType("integer");
 
-                            b1.Property<Guid?>("OrderId")
-                                .HasColumnType("uuid");
-
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
 
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("OrderId");
+                            b1.HasKey("OrderId", "Id");
 
                             b1.HasIndex("ProductId");
 
@@ -650,12 +632,14 @@ namespace Main.Infrastructure.Migrations
 
                             b1.OwnsMany("Main.Application.Models.CartProduct", "Products", b2 =>
                                 {
-                                    b2.Property<Guid>("Id")
-                                        .ValueGeneratedOnAdd()
-                                        .HasColumnType("uuid");
-
                                     b2.Property<Guid>("CartUserId")
                                         .HasColumnType("uuid");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b2.Property<int>("Id"));
 
                                     b2.Property<int>("Count")
                                         .HasColumnType("integer");
@@ -663,9 +647,7 @@ namespace Main.Infrastructure.Migrations
                                     b2.Property<Guid>("ProductId")
                                         .HasColumnType("uuid");
 
-                                    b2.HasKey("Id");
-
-                                    b2.HasIndex("CartUserId");
+                                    b2.HasKey("CartUserId", "Id");
 
                                     b2.HasIndex("ProductId");
 

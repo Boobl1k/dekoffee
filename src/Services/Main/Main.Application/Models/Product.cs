@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Main.Application.Models;
 
-namespace Main.Application.Models;
-
-[PrimaryKey(nameof(Id))]
 public class Product
 {
     public Guid Id { get; } = Guid.NewGuid();
