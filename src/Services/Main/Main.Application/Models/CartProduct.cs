@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Main.Application.Models;
 
-namespace Main.Application.Models;
-
-[Owned]
-public class CartProduct : OrderProduct
+public class CartProduct : CountedProduct
 {
     // ReSharper disable once UnusedMember.Local
     private CartProduct()

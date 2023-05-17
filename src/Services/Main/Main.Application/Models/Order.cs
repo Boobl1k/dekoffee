@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
 using Main.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Main.Application.Models;
 
@@ -15,7 +14,6 @@ public enum OrderStatus
     Canceled
 }
 
-[PrimaryKey(nameof(Id))]
 public class Order
 {
     public Guid Id { get; } = Guid.NewGuid();
@@ -26,7 +24,7 @@ public class Order
     public DateTime? CompleteTime { get; set; }
     public DateTime LastUpdateTime { get; set; }
     public OrderStatus Status { get; set; } = OrderStatus.Created;
-    public double TotalSum { get; set; }
+    public decimal TotalSum { get; set; }
     private Address? _address;
 
     public Address Address
@@ -59,7 +57,7 @@ public class Order
     {
     }
 
-    public Order(DateTime deadlineTime, DateTime lowerSelectedTime, DateTime upperSelectedTime, double totalSum,
+    public Order(DateTime deadlineTime, DateTime lowerSelectedTime, DateTime upperSelectedTime, decimal totalSum,
         Address address, User user, List<OrderProduct> products)
     {
         DeadlineTime = deadlineTime;

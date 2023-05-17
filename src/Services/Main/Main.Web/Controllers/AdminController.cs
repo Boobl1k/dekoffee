@@ -177,6 +177,7 @@ public class AdminController : CustomControllerBase
         if (await _orderService.CreateOrderBuilder()
                 .WithCourier()
                 .WithAddress()
+                .WithOrderProducts()
                 .WithProducts()
                 .WithUser()
                 .GetOrder(id) is not { } order)

@@ -17,7 +17,7 @@ public class CreateOrderDto
     [Required]
     public DateTime DeadlineTime { get; set; }
     [Required]
-    public double TotalSum { get; set; }
+    public decimal TotalSum { get; set; }
     [Required]
     public OrderStatus Status { get; set; }
 

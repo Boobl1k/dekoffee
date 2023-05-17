@@ -18,6 +18,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Main.Application\Main.Application.csproj" />
+      <ProjectReference Include="..\Main.Tools\Main.Tools.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Migrations\20230511225152_RecreateEverythingWithUpdatedEntities.Designer.cs" />
+      <Compile Remove="Migrations\20230511225447_RecreateEverythingWithUpdatedEntities.Designer.cs" />
+      <Compile Remove="Migrations\20230511230816_DataSeed.cs" />
+      <Compile Remove="Migrations\20230511230816_DataSeed.Designer.cs" />
+      <Compile Remove="Migrations\20230511230806_RecreateEverythingWithUpdatedEntities.Designer.cs" />
     </ItemGroup>
 
 </Project>

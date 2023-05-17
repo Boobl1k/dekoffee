@@ -64,9 +64,15 @@ public class OrderService : IOrderService, IOrderBuilder
         return this;
     }
 
-    public IOrderBuilder WithProducts()
+    public IOrderBuilder WithOrderProducts()
     {
         _query = _query.Include(p => p.Products);
+        return this;
+    }
+
+    public IOrderBuilder WithProducts()
+    {
+        _query = _query.Include(p => p.Products).ThenInclude(p => p.Product);
         return this;
     }
 
