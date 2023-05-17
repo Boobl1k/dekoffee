@@ -27,7 +27,11 @@ public class ProfileController : CustomControllerBase
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
             return UnauthorizedClient();
 
-        return Ok(Mapper.Map<ProfileDto>(user));
+        return Ok(new ProfileDto
+        {
+            Email = user.Email,
+            UserName = user.UserName
+        });
     }
 
     [Consumes(MediaTypeNames.Application.Json)]
@@ -42,7 +46,8 @@ public class ProfileController : CustomControllerBase
         if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
             return UnauthorizedClient();
 
-        user = Mapper.Map(profileDto, user);
+        user.UserName = profileDto.UserName;
+        user.Email = profileDto.Email;
         await _userService.UpdateUser(user);
         return NoContent();
     }

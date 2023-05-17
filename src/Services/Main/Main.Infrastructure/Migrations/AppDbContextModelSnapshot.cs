@@ -22,21 +22,6 @@ namespace Main.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CartProduct", b =>
-                {
-                    b.Property<Guid>("CartId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("CartId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("CartProduct");
-                });
-
             modelBuilder.Entity("Main.Application.Models.Address", b =>
                 {
                     b.Property<Guid>("Id")
@@ -44,7 +29,6 @@ namespace Main.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Apartment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("City")
@@ -52,22 +36,23 @@ namespace Main.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Commentary")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Floor")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int?>("Floor")
+                        .HasColumnType("integer");
 
                     b.Property<string>("House")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("Section")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -75,61 +60,6 @@ namespace Main.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("Main.Application.Models.Cart", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<double>("TotalSum")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Carts");
-                });
-
-            modelBuilder.Entity("Main.Application.Models.Courier", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Couriers");
-                });
-
-            modelBuilder.Entity("Main.Application.Models.Invoice", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("OperationTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<double>("Sum")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("Main.Application.Models.Order", b =>
@@ -141,19 +71,19 @@ namespace Main.Infrastructure.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CompleteTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid?>("CourierId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreationTime")
+                    b.Property<DateTime?>("CompleteTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("DeadlineTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<Guid?>("ExecutorId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("LowerSelectedTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Status")
@@ -162,6 +92,9 @@ namespace Main.Infrastructure.Migrations
                     b.Property<double>("TotalSum")
                         .HasColumnType("double precision");
 
+                    b.Property<DateTime>("UpperSelectedTime")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -169,11 +102,35 @@ namespace Main.Infrastructure.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("CourierId");
+                    b.HasIndex("ExecutorId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Main.Application.Models.OrderProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("Main.Application.Models.Product", b =>
@@ -200,8 +157,8 @@ namespace Main.Infrastructure.Migrations
                     b.Property<double>("Net")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -226,6 +183,7 @@ namespace Main.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -268,6 +226,7 @@ namespace Main.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -611,67 +570,11 @@ namespace Main.Infrastructure.Migrations
                     b.ToTable("OpenIddictTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("OrderId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("OrderProduct");
-                });
-
-            modelBuilder.Entity("CartProduct", b =>
-                {
-                    b.HasOne("Main.Application.Models.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Main.Application.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Main.Application.Models.Address", b =>
                 {
-                    b.HasOne("Main.Application.Models.User", "User")
+                    b.HasOne("Main.Application.Models.User", null)
                         .WithMany("Addresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Main.Application.Models.Cart", b =>
-                {
-                    b.HasOne("Main.Application.Models.User", "User")
-                        .WithOne()
-                        .HasForeignKey("Main.Application.Models.Cart", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Main.Application.Models.Invoice", b =>
-                {
-                    b.HasOne("Main.Application.Models.Order", "Order")
-                        .WithOne()
-                        .HasForeignKey("Main.Application.Models.Invoice", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Main.Application.Models.Order", b =>
@@ -682,10 +585,9 @@ namespace Main.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Main.Application.Models.Courier", "Courier")
+                    b.HasOne("Main.Application.Models.User", "Executor")
                         .WithMany()
-                        .HasForeignKey("CourierId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("ExecutorId");
 
                     b.HasOne("Main.Application.Models.User", "User")
                         .WithMany()
@@ -693,11 +595,100 @@ namespace Main.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Main.Application.Models.Invoice", "Invoice", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
                     b.Navigation("Address");
 
-                    b.Navigation("Courier");
+                    b.Navigation("Executor");
+
+                    b.Navigation("Invoice");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Main.Application.Models.OrderProduct", b =>
+                {
+                    b.HasOne("Main.Application.Models.Order", null)
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("Main.Application.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Main.Application.Models.User", b =>
+                {
+                    b.OwnsOne("Main.Application.Models.Cart", "Cart", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("TotalSum")
+                                .HasColumnType("numeric");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("AspNetUsers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+
+                            b1.OwnsMany("Main.Application.Models.CartProduct", "Products", b2 =>
+                                {
+                                    b2.Property<Guid>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<Guid>("CartUserId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<int>("Count")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<Guid>("ProductId")
+                                        .HasColumnType("uuid");
+
+                                    b2.HasKey("Id");
+
+                                    b2.HasIndex("CartUserId");
+
+                                    b2.HasIndex("ProductId");
+
+                                    b2.ToTable("CartProduct");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CartUserId");
+
+                                    b2.HasOne("Main.Application.Models.Product", "Product")
+                                        .WithMany()
+                                        .HasForeignKey("ProductId")
+                                        .OnDelete(DeleteBehavior.Cascade)
+                                        .IsRequired();
+
+                                    b2.Navigation("Product");
+                                });
+
+                            b1.Navigation("Products");
+                        });
+
+                    b.Navigation("Cart")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -775,19 +766,9 @@ namespace Main.Infrastructure.Migrations
                     b.Navigation("Authorization");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
+            modelBuilder.Entity("Main.Application.Models.Order", b =>
                 {
-                    b.HasOne("Main.Application.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Main.Application.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Main.Application.Models.User", b =>

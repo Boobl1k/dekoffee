@@ -1,11 +1,21 @@
-﻿namespace Main.Application.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace Main.Application.Models;
+
+[Owned]
 public class Invoice
 {
-    public Guid Id { get; set; }
-    public double Sum { get; set; }
-    public DateTime OperationTime { get; set; }
+    public double Sum { get; }
+    public DateTime OperationTime { get; }
 
-    public Guid OrderId { get; set; }
-    public Order Order { get; set; } = null!;
+    // ReSharper disable once UnusedMember.Local
+    private Invoice()
+    {
+    }
+
+    public Invoice(DateTime operationTime, double sum)
+    {
+        Sum = sum;
+        OperationTime = operationTime;
+    }
 }

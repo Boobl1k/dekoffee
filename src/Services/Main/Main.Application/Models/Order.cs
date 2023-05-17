@@ -1,39 +1,121 @@
-﻿namespace Main.Application.Models;
+﻿using System.Diagnostics.Contracts;
+using Main.Application.Exceptions;
+using Microsoft.EntityFrameworkCore;
+
+namespace Main.Application.Models;
 
 public enum OrderStatus
 {
     Created,
-    Processing,
-    InCooking,
+    Accepted,
+    Cooking,
+    Packed,
     InDelivery,
     Completed,
     Canceled
 }
 
+[PrimaryKey(nameof(Id))]
 public class Order
 {
-    public Guid Id { get; set; }
-    public DateTime CreationTime { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
+    public DateTime CreationTime { get; } = DateTime.Now;
     public DateTime DeadlineTime { get; set; }
-    public DateTime CompleteTime { get; set; }
+    public DateTime LowerSelectedTime { get; set; }
+    public DateTime UpperSelectedTime { get; set; }
+    public DateTime? CompleteTime { get; set; }
     public DateTime LastUpdateTime { get; set; }
-    public OrderStatus Status { get; set; }
+    public OrderStatus Status { get; set; } = OrderStatus.Created;
     public double TotalSum { get; set; }
-    public Address Address { get; set; } = null!;
-    public User User { get; set; } = null!;
-    public Courier? Courier { get; set; }
+    private Address? _address;
 
-    public List<Product> Products { get; set; } = null!;
+    public Address Address
+    {
+        get => _address ?? throw new UninitializedException();
+        set => _address = value;
+    }
+
+    private User? _user;
+
+    public User User
+    {
+        get => _user ?? throw new UninitializedException();
+        set => _user = value;
+    }
+
+    public User? Executor { get; set; }
+    public Invoice? Invoice { get; set; }
+
+    private List<OrderProduct>? _products;
+
+    public List<OrderProduct> Products
+    {
+        get => _products ?? throw new UninitializedException();
+        set => _products = value;
+    }
+
+    // ReSharper disable once UnusedMember.Local
+    private Order()
+    {
+    }
+
+    public Order(DateTime deadlineTime, DateTime lowerSelectedTime, DateTime upperSelectedTime, double totalSum,
+        Address address, User user, List<OrderProduct> products)
+    {
+        DeadlineTime = deadlineTime;
+        LowerSelectedTime = lowerSelectedTime;
+        UpperSelectedTime = upperSelectedTime;
+        TotalSum = totalSum;
+        Address = address;
+        User = user;
+        Products = products;
+
+        LastUpdateTime = CreationTime;
+    }
 
     public static string GetStatusString(OrderStatus status) =>
         status switch
         {
             OrderStatus.Created => "Создан",
-            OrderStatus.Processing => "Обрабатывается",
-            OrderStatus.InCooking => "Готовится",
+            OrderStatus.Accepted => "Принят",
+            OrderStatus.Cooking => "Готовится",
+            OrderStatus.Packed => "Собран",
             OrderStatus.InDelivery => "В доставке",
             OrderStatus.Completed => "Завершен",
             OrderStatus.Canceled => "Отменен",
             _ => throw new ArgumentOutOfRangeException(nameof(status), status, "Invalid Order Status provided")
         };
+
+    [Pure]
+    public IEnumerable<OrderStatus> GetNextStatuses()
+    {
+        if (Status is OrderStatus.Created)
+        {
+            yield return OrderStatus.Canceled;
+        }
+
+        switch (Status)
+        {
+            case OrderStatus.Created:
+                yield return OrderStatus.Accepted;
+                break;
+            case OrderStatus.Accepted:
+                yield return OrderStatus.Cooking;
+                break;
+            case OrderStatus.Cooking:
+                yield return OrderStatus.Packed;
+                break;
+            case OrderStatus.Packed:
+                yield return OrderStatus.InDelivery;
+                break;
+            case OrderStatus.InDelivery:
+                yield return OrderStatus.Completed;
+                break;
+            case OrderStatus.Completed:
+                break;
+            case OrderStatus.Canceled:
+            default:
+                break;
+        }
+    }
 }

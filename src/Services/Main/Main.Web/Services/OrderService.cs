@@ -60,7 +60,7 @@ public class OrderService : IOrderService, IOrderBuilder
 
     public IOrderBuilder WithCourier()
     {
-        _query = _query.Include(p => p.Courier);
+        _query = _query.Include(p => p.Executor);
         return this;
     }
 

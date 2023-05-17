@@ -39,8 +39,7 @@ public class OrderController : CustomControllerBase
             .WithUser(o => o.User.Id == user.Id)
             .GetOrders();
 
-        var list = Mapper.Map<List<Order>, List<DisplayOrderDto>>(orders);
-        return Ok(list);
+        return Ok(orders.Select(DisplayOrderDto.FromEntity));
     }
 
     [Produces(MediaTypeNames.Application.Json)]
@@ -61,7 +60,7 @@ public class OrderController : CustomControllerBase
                 .GetOrder(id) is not { } order)
             return NotFound();
 
-        return Ok(Mapper.Map<DisplayOrderDto>(order));
+        return Ok(DisplayOrderDto.FromEntity(order));
     }
 
     [Consumes(MediaTypeNames.Application.Json)]
@@ -87,19 +86,16 @@ public class OrderController : CustomControllerBase
         if (user.Addresses.FirstOrDefault(a => a.Id == orderDto.AddressId) is not { } address)
             return NotFound();
 
-        var order = Mapper.Map<Order>(orderDto);
-        order.LastUpdateTime = order.CreationTime;
-        order.User = user;
-        order.Address = address;
-        order.Products = new List<Product>();
+        var order = new Order(orderDto.DeadlineTime, orderDto.LowerSelectedTime, orderDto.UpperSelectedTime,
+            orderDto.TotalSum, address, user, new List<OrderProduct>());
 
         var allProducts = await _productService.GetProducts();
-        foreach (var productId in orderDto.Products)
+        foreach (var orderProduct in orderDto.Products)
         {
-            if (allProducts.FirstOrDefault(p => p.Id == productId) is not { } product)
+            if (allProducts.FirstOrDefault(p => p.Id == orderProduct.ProductId) is not { } product)
                 return NotFound();
 
-            order.Products.Add(product);
+            order.Products.Add(new OrderProduct(product, orderProduct.Count));
         }
 
         if (await _orderService.CreateOrder(order) is not { } result)

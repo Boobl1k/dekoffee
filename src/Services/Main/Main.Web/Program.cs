@@ -19,8 +19,6 @@ services.AddAuthorization();
 
 builder.AddCustomApplicationServices();
 
-builder.AddCustomAutoMapper();
-
 services.AddCors();
 
 var app = builder.Build();

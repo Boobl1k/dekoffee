@@ -6,6 +6,7 @@ public interface IAddressService
 {
     Task<IEnumerable<Address>> GetAddresses();
     Task<Address?> CreateAddress(Address address);
+    Task<Address?> CreateAddressForUser(Address address, User user);
     Task<Address> UpdateAddress(Address address);
     Task DeleteAddress(Address address);
     IAddressBuilder CreateAddressBuilder();
@@ -13,6 +14,5 @@ public interface IAddressService
 
 public interface IAddressBuilder
 {
-    IAddressBuilder WithUser();
     Task<Address?> GetAddress(Guid id);
 }

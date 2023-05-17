@@ -6,6 +6,7 @@ using Main.Dto.Order;
 using Main.Dto.Product;
 using Main.Dto.User;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Main.Controllers;
 
@@ -28,12 +29,12 @@ public class AdminController : CustomControllerBase
     #region Users
 
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayUserDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayUserDto>))]
     [HttpGet("users")]
     public async Task<IActionResult> GetUsers()
     {
         var users = await _userService.CreateUserBuilder().GetUsers();
-        return Ok(Mapper.Map<List<User>, List<DisplayUserDto>>(users));
+        return Ok(users.Select(DisplayUserDto.FromEntity));
     }
 
     [Produces(MediaTypeNames.Application.Json)]
@@ -44,7 +45,7 @@ public class AdminController : CustomControllerBase
     {
         if (await _userService.CreateUserBuilder().FindById(id) is not { } user)
             return NotFound();
-        return Ok(Mapper.Map<DisplayUserDto>(user));
+        return Ok(DisplayUserDto.FromEntity(user));
     }
 
     [Consumes(MediaTypeNames.Application.Json)]
@@ -59,7 +60,7 @@ public class AdminController : CustomControllerBase
         if (await _userService.CreateUserBuilder().FindById(id) is not { } user)
             return NotFound();
 
-        user = Mapper.Map(userDto, user);
+        user.IsBlocked = userDto.IsBlocked;
 
         await _userService.UpdateUser(user);
         return NoContent();
@@ -91,7 +92,7 @@ public class AdminController : CustomControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var product = Mapper.Map<Product>(productDto);
+        var product = productDto.ToEntity();
 
         if (await _productService.CreateProduct(product) is not { } result)
             throw new Exception("Cannot create Product");
@@ -111,7 +112,7 @@ public class AdminController : CustomControllerBase
         if (await _productService.GetProduct(id) is not { } product)
             return NotFound();
 
-        product = Mapper.Map(productDto, product);
+        productDto.UpdateProduct(product);
         await _productService.UpdateProduct(product);
         return NoContent();
     }
@@ -141,7 +142,7 @@ public class AdminController : CustomControllerBase
         if (await _productService.GetProduct(id) is not { } product)
             return NotFound();
 
-        product = Mapper.Map(productDto, product);
+        product.IsBlocked = productDto.IsBlocked;
 
         await _productService.UpdateProduct(product);
         return NoContent();
@@ -164,8 +165,7 @@ public class AdminController : CustomControllerBase
             .WithUser()
             .GetOrders();
 
-        var list = Mapper.Map<List<Order>, List<DisplayOrderDto>>(orders);
-        return Ok(list);
+        return Ok(orders.Select(DisplayOrderDto.FromEntity));
     }
 
     [Produces(MediaTypeNames.Application.Json)]
@@ -182,7 +182,7 @@ public class AdminController : CustomControllerBase
                 .GetOrder(id) is not { } order)
             return NotFound();
 
-        return Ok(Mapper.Map<DisplayOrderDto>(order));
+        return Ok(DisplayOrderDto.FromEntity(order));
     }
 
     [Consumes(MediaTypeNames.Application.Json)]
@@ -202,7 +202,11 @@ public class AdminController : CustomControllerBase
                 .GetOrder(id) is not { } order)
             return NotFound();
 
-        order = Mapper.Map(orderDto, order);
+        var nextStatus = Enum.Parse<OrderStatus>(orderDto.OrderStatus);
+        var possibleStatuses = order.GetNextStatuses().ToArray();
+        if (!possibleStatuses.Contains(nextStatus))
+            return BadRequest($"Next order status can be: {string.Join(", ", possibleStatuses)}");
+        order.Status = nextStatus;
         order.LastUpdateTime = DateTime.Now;
 
         await _orderService.UpdateOrder(order);

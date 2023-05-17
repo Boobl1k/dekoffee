@@ -33,20 +33,19 @@ public class AddressController : CustomControllerBase
         if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
             return NotFound();
 
-        return Ok(Mapper.Map<DisplayAddressDto>(address));
+        return Ok(DisplayAddressDto.FromEntity(address));
     }
 
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayAddressDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayAddressDto>))]
     [HttpGet]
     public async Task<IActionResult> GetAddresses()
     {
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
             return Unauthorized();
 
-        var list = Mapper.Map<List<Address>, List<DisplayAddressDto>>(user.Addresses);
-        return Ok(list);
+        return Ok(user.Addresses.Select(DisplayAddressDto.FromEntity));
     }
 
     [Consumes(MediaTypeNames.Application.Json)]
@@ -60,13 +59,12 @@ public class AddressController : CustomControllerBase
         if (!ModelState.IsValid)
             return BadRequest();
 
-        if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
+        if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
             return UnauthorizedClient();
 
-        var address = Mapper.Map<Address>(addressDto);
-        address.User = user;
+        var address = addressDto.ToEntity();
 
-        if (await _addressService.CreateAddress(address) is not { } resultAddress)
+        if (await _addressService.CreateAddressForUser(address, user) is not { } resultAddress)
             throw new Exception("Cannot create Address");
 
         return StatusCode(StatusCodes.Status201Created, resultAddress.Id);
@@ -86,10 +84,10 @@ public class AddressController : CustomControllerBase
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
             return UnauthorizedClient();
 
-        if (user.Addresses.FirstOrDefault(a => a.Id == id) is not { } address)
+        if (user.Addresses.FirstOrDefault(a => a.Id == id) is not {} address)
             return NotFound();
 
-        address = Mapper.Map(addressDto, address);
+        addressDto.UpdateAddress(address);
         await _addressService.UpdateAddress(address);
 
         return NoContent();

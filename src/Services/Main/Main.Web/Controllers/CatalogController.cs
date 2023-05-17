@@ -19,12 +19,12 @@ public class CatalogController : CustomControllerBase
     }
 
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayProductDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayProductDto>))]
     [HttpGet]
     public async Task<IActionResult> GetProducts()
     {
         var products = (await _productService.GetProducts()).ToList();
-        return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(products));
+        return Ok(products.Select(DisplayProductDto.FromEntity));
     }
 
     [Produces(MediaTypeNames.Application.Json)]
@@ -35,12 +35,12 @@ public class CatalogController : CustomControllerBase
     {
         return await _productService.GetProduct(id) is not { } product
             ? NotFound()
-            : Ok(Mapper.Map<DisplayProductDto>(product));
+            : Ok(DisplayProductDto.FromEntity(product));
     }
 
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayProductDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayProductDto>))]
     [HttpGet("search")]
     public async Task<IActionResult> SearchByKeywords([FromQuery] string? keyword)
     {
@@ -55,6 +55,6 @@ public class CatalogController : CustomControllerBase
                     .Where(c => !char.IsWhiteSpace(c)))))
             .ToList();
 
-        return Ok(Mapper.Map<List<Product>, List<DisplayProductDto>>(result));
+        return Ok(result.Select(DisplayProductDto.FromEntity));
     }
 }

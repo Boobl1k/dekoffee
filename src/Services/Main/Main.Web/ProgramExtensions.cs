@@ -34,9 +34,6 @@ public static class ProgramExtensions
             .AddNewtonsoftJson();
     }
 
-    public static void AddCustomAutoMapper(this WebApplicationBuilder builder) =>
-        builder.Services.AddAutoMapper(typeof(Program));
-
     public static void AddCustomApplicationServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddTransient<IUserService<User>, UserService>();
