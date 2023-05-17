@@ -16,6 +16,7 @@ public interface IOrderBuilder
     IOrderBuilder WithAddress();
     IOrderBuilder WithUser(Expression<Func<Order, bool>>? expression = null);
     IOrderBuilder WithCourier();
+    IOrderBuilder WithOrderProducts();
     IOrderBuilder WithProducts();
     Task<List<Order>> GetOrders();
     Task<Order?> GetOrder(Guid id);

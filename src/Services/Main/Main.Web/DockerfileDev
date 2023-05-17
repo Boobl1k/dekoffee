@@ -4,6 +4,7 @@ WORKDIR /app
 COPY ["src/Services/Main/Main.Web/Main.Web.csproj", "Main.Web/"]
 COPY ["src/Services/Main/Main.Application/Main.Application.csproj", "Main.Application/"]
 COPY ["src/Services/Main/Main.Infrastructure/Main.Infrastructure.csproj", "Main.Infrastructure/"]
+COPY ["src/Services/Main/Main.Tools/Main.Tools.csproj", "Main.Tools/"]
 RUN dotnet restore "Main.Web/Main.Web.csproj"
 
 COPY ["src/Services/Main/", "/"]

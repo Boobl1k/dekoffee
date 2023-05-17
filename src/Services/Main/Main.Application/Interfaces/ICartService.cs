@@ -12,6 +12,7 @@ public interface ICartService
 
 public interface ICartBuilder
 {
+    ICartBuilder WithCartProducts();
     ICartBuilder WithProducts();
-    Task<Cart?> GetCart(Guid id);
+    Task<User?> GetUserWithCart(Guid id);
 }

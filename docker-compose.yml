@@ -17,6 +17,7 @@ services:
       - './src/Services/Main/Main.Web/:/app/Main.Web'
       - './src/Services/Main/Main.Application/:/app/Main.Application'
       - './src/Services/Main/Main.Infrastructure/:/app/Main.Infrastructure'
+      - './src/Services/Main/Main.Tools/:/app/Main.Tools'
     depends_on:
       - postgres
 
