@@ -1,29 +1,37 @@
 ﻿using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
 using Main.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Services;
 
 public class CartService : ICartService, ICartBuilder
 {
-    private readonly AppDbContext _dbContext;
+    private readonly IUnitOfWork _unitOfWork;
     private IQueryable<User> _query;
+    private readonly AppDbContext _dbContext;
 
-    public CartService(AppDbContext dbContext)
+    public CartService(UserManager<User> userManager, IUnitOfWork unitOfWork, AppDbContext dbContext)
     {
+        _unitOfWork = unitOfWork;
         _dbContext = dbContext;
-        _query = dbContext.Users.Include(u => u.Cart);
+        _query = userManager.Users.Include(u => u.Cart);
     }
 
     public async Task<CartProduct?> AddProductToCart(Guid userId, CartProduct product)
     {
-        var user = await CreateCartBuilder().WithProducts().GetUserWithCart(userId) ?? throw new Exception("Not logged in");
+        var user = await CreateCartBuilder().WithProducts().GetUserWithCart(userId) ??
+                   throw new Exception("Not logged in");
 
         user.Cart.Products.Add(product);
-        await _dbContext.SaveChangesAsync();
+        _dbContext.Update(user);
 
-        var lastItem = (await CreateCartBuilder().WithProducts().GetUserWithCart(userId) ?? throw new Exception("No such cart"))
+        await _unitOfWork.SaveChangesAsync();
+
+        var lastItem = (await CreateCartBuilder().WithProducts().GetUserWithCart(userId) ??
+                        throw new Exception("No such cart"))
             .Cart
             .Products
             .LastOrDefault();
@@ -37,7 +45,7 @@ public class CartService : ICartService, ICartBuilder
             throw new ArgumentOutOfRangeException();
 
         user.Cart.Products.RemoveAt(index);
-        await _dbContext.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task ClearCart(Guid id)
@@ -46,7 +54,7 @@ public class CartService : ICartService, ICartBuilder
             throw new Exception("Not logged in");
 
         user.Cart.Products.Clear();
-        await _dbContext.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public ICartBuilder CreateCartBuilder() => this;

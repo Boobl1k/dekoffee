@@ -1,5 +1,5 @@
 ﻿using System.Net.Mime;
-using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
 using Main.Dto;
 using Main.Dto.Order;
@@ -77,17 +77,14 @@ public class OrderController : CustomControllerBase
         if (await _userService.CreateUserBuilder().WithAddresses().GetCurrentUser() is not { } user)
             return UnauthorizedClient();
 
-        if (orderDto.TotalSum <= 0)
-            return BadRequest("Order TotalSum can't be 0 or less than 0.");
-
         if (orderDto.Products.Count == 0)
             return BadRequest("Order can't have 0 Products.");
 
         if (user.Addresses.FirstOrDefault(a => a.Id == orderDto.AddressId) is not { } address)
             return NotFound();
 
-        var order = new Order(orderDto.DeadlineTime, orderDto.LowerSelectedTime, orderDto.UpperSelectedTime,
-            orderDto.TotalSum, address, user, new List<OrderProduct>());
+        var order = new Order(orderDto.LowerSelectedTime, orderDto.UpperSelectedTime, address, user,
+            new List<OrderProduct>());
 
         var allProducts = await _productService.GetProducts();
         foreach (var orderProduct in orderDto.Products)
@@ -97,6 +94,9 @@ public class OrderController : CustomControllerBase
 
             order.Products.Add(new OrderProduct(product, orderProduct.Count));
         }
+
+        if (_orderService.CalculateOrderTotalSum(order.Products) <= 0)
+            return BadRequest("Order TotalSum can't be 0 or less than 0.");
 
         if (await _orderService.CreateOrder(order) is not { } result)
             throw new Exception("Cannot create Order");
@@ -117,9 +117,7 @@ public class OrderController : CustomControllerBase
         if (await _orderService.CreateOrderBuilder().WithUser(o => o.User.Id == user.Id).GetOrder(id) is not { } order)
             return NotFound();
 
-        order.Status = OrderStatus.Canceled;
-        await _orderService.UpdateOrder(order);
-
+        await _orderService.ChangeOrderStatus(order, OrderStatus.Canceled);
         return StatusCode(StatusCodes.Status201Created, order.Id);
     }
 }

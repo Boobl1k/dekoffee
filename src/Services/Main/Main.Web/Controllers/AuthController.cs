@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using System.Security.Claims;
 using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
 using Main.Dto;
 using Main.Dto.User;

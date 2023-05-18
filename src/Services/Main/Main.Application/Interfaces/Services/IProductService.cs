@@ -1,4 +1,4 @@
-﻿namespace Main.Application.Interfaces;
+﻿namespace Main.Application.Interfaces.Services;
 
 public interface IProductService<TEntity> where TEntity : class
 {
@@ -7,4 +7,5 @@ public interface IProductService<TEntity> where TEntity : class
     Task<TEntity?> CreateProduct(TEntity entity);
     Task<TEntity> UpdateProduct(TEntity entity);
     Task DeleteProduct(TEntity entity);
+    Task BlockUnblockProduct(TEntity entity, bool isBlocked);
 }

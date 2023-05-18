@@ -1,6 +1,6 @@
 ﻿using Main.Application.Models;
 
-namespace Main.Application.Interfaces;
+namespace Main.Application.Interfaces.Services;
 
 public interface ICartService
 {
