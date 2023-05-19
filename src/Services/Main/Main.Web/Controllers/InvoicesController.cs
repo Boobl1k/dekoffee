@@ -23,7 +23,7 @@ public class InvoicesController : CustomControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayAddressDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayInvoiceDto))]
     public async Task<IActionResult> CreateInvoice([FromRoute] Guid orderId)
     {
         var order = await _orderService.CreateOrderBuilder().GetOrder(orderId);
