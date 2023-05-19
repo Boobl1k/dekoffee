@@ -31,15 +31,14 @@ public class InvoicesController : CustomControllerBase
         if (order.Invoice is { }) return BadRequest("Invoice already paid");
         var invoice = new Invoice(DateTime.Now, order.TotalSum);
         order.Invoice = invoice;
-        order.Status = OrderStatus.Accepted;
-        await _orderService.UpdateOrder(order);
+        await _orderService.ChangeOrderStatus(order, OrderStatus.Accepted);
         return Ok(new DisplayInvoiceDto(orderId, true, invoice.Sum, invoice.OperationTime));
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayAddressDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayInvoiceDto))]
     public async Task<IActionResult> GetInvoice([FromRoute] Guid orderId)
     {
         var order = await _orderService.CreateOrderBuilder().GetOrder(orderId);
