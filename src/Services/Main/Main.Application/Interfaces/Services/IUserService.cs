@@ -1,9 +1,11 @@
-﻿namespace Main.Application.Interfaces;
+﻿namespace Main.Application.Interfaces.Services;
 
 public interface IUserService<TEntity> where TEntity : class
 {
     Task<bool> ValidateCredentials(string email, string? password = null, bool checkPassword = false);
     Task<TEntity> UpdateUser(TEntity entity);
+    Task BlockUnblockUser(TEntity entity, bool isBlocked);
+    Task MarkUserAsDeleted(TEntity entity);
     IUserBuilder<TEntity> CreateUserBuilder();
 }
 

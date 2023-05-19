@@ -5,6 +5,7 @@ public class UpdateProductDto : ProductDto
     public void UpdateProduct(Application.Models.Product product)
     {
         product.Title = Title;
+        product.ImageUrl = ImageUrl;
         product.Price = Price;
         product.Description = Description;
         product.Net = Net;

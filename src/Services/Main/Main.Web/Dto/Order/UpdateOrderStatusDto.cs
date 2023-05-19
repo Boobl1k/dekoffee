@@ -5,5 +5,5 @@ namespace Main.Dto.Order;
 
 public class UpdateOrderStatusDto
 {
-    [EnumDataType(typeof(OrderStatus))] public string OrderStatus { get; set; } = null!;
+    [Required, EnumDataType(typeof(OrderStatus))] public string OrderStatus { get; set; } = null!;
 }

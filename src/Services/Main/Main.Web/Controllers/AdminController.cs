@@ -1,12 +1,11 @@
 ﻿using System.Net.Mime;
-using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
 using Main.Dto;
 using Main.Dto.Order;
 using Main.Dto.Product;
 using Main.Dto.User;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Main.Controllers;
 
@@ -60,9 +59,7 @@ public class AdminController : CustomControllerBase
         if (await _userService.CreateUserBuilder().FindById(id) is not { } user)
             return NotFound();
 
-        user.IsBlocked = userDto.IsBlocked;
-
-        await _userService.UpdateUser(user);
+        await _userService.BlockUnblockUser(user, userDto.IsBlocked);
         return NoContent();
     }
 
@@ -73,9 +70,8 @@ public class AdminController : CustomControllerBase
     {
         if (await _userService.CreateUserBuilder().FindById(id) is not { } user)
             return NotFound();
-        user.IsDeleted = true;
 
-        await _userService.UpdateUser(user);
+        await _userService.MarkUserAsDeleted(user);
         return NoContent();
     }
 
@@ -142,9 +138,7 @@ public class AdminController : CustomControllerBase
         if (await _productService.GetProduct(id) is not { } product)
             return NotFound();
 
-        product.IsBlocked = productDto.IsBlocked;
-
-        await _productService.UpdateProduct(product);
+        await _productService.BlockUnblockProduct(product, productDto.IsBlocked);
         return NoContent();
     }
 
@@ -207,11 +201,8 @@ public class AdminController : CustomControllerBase
         var possibleStatuses = order.GetNextStatuses().ToArray();
         if (!possibleStatuses.Contains(nextStatus))
             return BadRequest($"Next order status can be: {string.Join(", ", possibleStatuses)}");
-        order.Status = nextStatus;
-        order.LastUpdateTime = DateTime.Now;
 
-        await _orderService.UpdateOrder(order);
-
+        await _orderService.ChangeOrderStatus(order, nextStatus);
         return NoContent();
     }
 

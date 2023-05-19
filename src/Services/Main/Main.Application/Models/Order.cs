@@ -57,13 +57,11 @@ public class Order
     {
     }
 
-    public Order(DateTime deadlineTime, DateTime lowerSelectedTime, DateTime upperSelectedTime, decimal totalSum,
-        Address address, User user, List<OrderProduct> products)
+    public Order(DateTime lowerSelectedTime, DateTime upperSelectedTime, Address address, User user,
+        List<OrderProduct> products)
     {
-        DeadlineTime = deadlineTime;
         LowerSelectedTime = lowerSelectedTime;
         UpperSelectedTime = upperSelectedTime;
-        TotalSum = totalSum;
         Address = address;
         User = user;
         Products = products;

@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +42,18 @@ public class UserService : IUserService<User>, IUserBuilder<User>
         if (!result.Succeeded)
             throw new Exception("Unable to update user");
         return (await CreateUserBuilder().FindByEmail(user.Email!))!;
+    }
+
+    public async Task BlockUnblockUser(User user, bool isBlocked)
+    {
+        user.IsBlocked = isBlocked;
+        await UpdateUser(user);
+    }
+
+    public async Task MarkUserAsDeleted(User user)
+    {
+        user.IsDeleted = true;
+        await UpdateUser(user);
     }
 
     public async Task<List<User>> GetUsers() =>

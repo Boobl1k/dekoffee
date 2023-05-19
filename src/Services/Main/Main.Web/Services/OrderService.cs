@@ -1,20 +1,20 @@
 ﻿using System.Linq.Expressions;
 using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
-using Main.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Services;
 
 public class OrderService : IOrderService, IOrderBuilder
 {
-    private readonly AppDbContext _dbContext;
+    private readonly IUnitOfWork _unitOfWork;
     private IQueryable<Order> _query;
 
-    public OrderService(AppDbContext dbContext)
+    public OrderService(IUnitOfWork unitOfWork)
     {
-        _dbContext = dbContext;
-        _query = dbContext.Orders;
+        _unitOfWork = unitOfWork;
+        _query = unitOfWork.Orders.FindAll();
     }
 
     public async Task<List<Order>> GetOrders() =>
@@ -25,23 +25,39 @@ public class OrderService : IOrderService, IOrderBuilder
 
     public async Task<Order?> CreateOrder(Order order)
     {
-        _dbContext.Orders.Add(order);
-        await _dbContext.SaveChangesAsync();
+        order.DeadlineTime = order.UpperSelectedTime.AddMinutes(15);
+        order.TotalSum = CalculateOrderTotalSum(order.Products);
+        _unitOfWork.Orders.Create(order);
+        await _unitOfWork.SaveChangesAsync();
         return (await FullOrder(order))!;
     }
 
     public async Task<Order> UpdateOrder(Order order)
     {
-        _dbContext.Orders.Update(order);
-        await _dbContext.SaveChangesAsync();
+        _unitOfWork.Orders.Update(order);
+        await _unitOfWork.SaveChangesAsync();
         return (await FullOrder(order))!;
     }
 
     public async Task DeleteOrder(Order order)
     {
-        _dbContext.Orders.Remove(order);
-        await _dbContext.SaveChangesAsync();
+        _unitOfWork.Orders.Delete(order);
+        await _unitOfWork.SaveChangesAsync();
     }
+
+    public async Task ChangeOrderStatus(Order order, OrderStatus status)
+    {
+        order.Status = status;
+        order.LastUpdateTime = DateTime.Now;
+
+        if (order.Status is OrderStatus.Completed or OrderStatus.Canceled)
+            order.CompleteTime = order.LastUpdateTime;
+
+        await UpdateOrder(order);
+    }
+
+    public decimal CalculateOrderTotalSum(IEnumerable<OrderProduct> products) =>
+        products.Sum(p => p.TotalPrice);
 
     public IOrderBuilder WithAddress()
     {

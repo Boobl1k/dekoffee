@@ -1,6 +1,8 @@
 ﻿using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
 using Main.Dto;
+using Main.Infrastructure;
 using Main.Infrastructure.Data;
 using Main.Infrastructure.Options;
 using Main.Services;
@@ -41,6 +43,9 @@ public static class ProgramExtensions
         builder.Services.AddTransient<ICartService, CartService>();
         builder.Services.AddTransient<IAddressService, AddressService>();
         builder.Services.AddTransient<IOrderService, OrderService>();
+        builder.Services.AddTransient<ISearchService, SearchService>();
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     public static void AddCustomSwaggerGen(this WebApplicationBuilder builder) =>

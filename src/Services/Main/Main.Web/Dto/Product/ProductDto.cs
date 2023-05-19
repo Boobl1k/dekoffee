@@ -6,7 +6,7 @@ namespace Main.Dto.Product;
 public class ProductDto
 {
     [Required] public string Title { get; set; } = null!;
-
+    [Required] public string ImageUrl { get; set; } = null!;
     [Required] public decimal Price { get; set; }
 
     public string? Description { get; set; }
@@ -24,6 +24,6 @@ public class ProductDto
     [Pure]
     public Application.Models.Product ToEntity()
     {
-        return new Application.Models.Product(Title, Price, Description, Net, Gross, Country, EnergyValue);
+        return new Application.Models.Product(Title, ImageUrl, Price, Description, Net, Gross, Country, EnergyValue);
     }
 }

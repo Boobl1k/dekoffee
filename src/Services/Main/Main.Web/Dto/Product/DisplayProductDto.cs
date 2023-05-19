@@ -14,6 +14,7 @@ public class DisplayProductDto : ProductDto
         IsBlocked = entity.IsBlocked,
         Net = entity.Net,
         Price = entity.Price,
+        ImageUrl = entity.ImageUrl,
         Title = entity.Title
     };
 }

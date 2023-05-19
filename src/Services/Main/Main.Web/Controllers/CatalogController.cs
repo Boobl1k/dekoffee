@@ -1,5 +1,5 @@
 ﻿using System.Net.Mime;
-using Main.Application.Interfaces;
+using Main.Application.Interfaces.Services;
 using Main.Application.Models;
 using Main.Dto;
 using Main.Dto.Product;
@@ -12,10 +12,12 @@ namespace Main.Controllers;
 public class CatalogController : CustomControllerBase
 {
     private readonly IProductService<Product> _productService;
+    private readonly ISearchService _searchService;
 
-    public CatalogController(IProductService<Product> productService)
+    public CatalogController(IProductService<Product> productService, ISearchService searchService)
     {
         _productService = productService;
+        _searchService = searchService;
     }
 
     [Produces(MediaTypeNames.Application.Json)]
@@ -47,13 +49,12 @@ public class CatalogController : CustomControllerBase
         if (string.IsNullOrWhiteSpace(keyword))
             return NoContent();
 
-        var products = await _productService.GetProducts();
-        var result = products
-            .Where(p => string.Concat(p.Title.ToLower()
-                    .Where(c => !char.IsWhiteSpace(c)))
-                .Contains(string.Concat(keyword.ToLower()
-                    .Where(c => !char.IsWhiteSpace(c)))))
-            .ToList();
+        var result = _searchService
+            .CreateSearchBuilder(await _productService.GetProducts(), keyword)
+            .InTitle()
+            .InCountry()
+            .InDescription()
+            .SearchProducts();
 
         return Ok(result.Select(DisplayProductDto.FromEntity));
     }
