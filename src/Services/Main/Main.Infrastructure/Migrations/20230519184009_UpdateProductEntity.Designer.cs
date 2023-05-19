@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Main.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230518201142_UpdateProductEntity")]
+    [Migration("20230519184009_UpdateProductEntity")]
     partial class UpdateProductEntity
     {
         /// <inheritdoc />
@@ -479,7 +479,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@DEKOFF.EE",
                             NormalizedUserName = "АДМИН",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMj0B6u7Yc0rbFbf1OuCYC+gdoy8nZveGcbW86aopehOF9V84KC1HnM/WriMKppbDg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJOdfwFMKxeSdiix/9wi/elzLUlDzs5MBDicXO1bSauJ9UlGg/jWCMhtvhyfc0foxQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -496,7 +496,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "ADEL@DEKOFF.EE",
                             NormalizedUserName = "БАРИСТА_АДЕЛЬ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC7zoQIndEW89NVT3Ojbdhjhgjgp9FiliD3MXesbeOTdGqxIuwxmWc9JFHc5r1WU5w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHPrSyJRzm97UCNtKFN7W0eCT23mzbEJAcyjU3Y1UuMp8Qgngl8xQkt/wZvLXOe1Wg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -513,7 +513,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "COURIER.DMITRY@DEKOFF.EE",
                             NormalizedUserName = "КУРЬЕР_ДМИТРИЙ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBMXjHo207pzXoNuZAH/i8yTRDJnqoorsWZZwzEqBIraJrykB036QrADeCne5rnCiA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGwIXjMob/RIvqWotbsbSyKMCX6/mU1UmLPAZcKlGPq0zbo3+l+RtJb/yU6yVfeJ0w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -530,7 +530,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "COURIER.RUSLAN@DEKOFF.EE",
                             NormalizedUserName = "КУРЬЕР_РУСЛАН",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHSb8NHQSShqTu6Ts5fG4kVIeC7+U8TlMpuE6KwUoT6E7kNfDX15ai6ZdOOFesK0TQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKjzh5IBjIW0CJNcRoEN09pFdKjHxh4TB23Bz26y/Ppj9sXlIsZqdUwjSZnLnoEviw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -547,7 +547,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "MANSUR@EMA.IL",
                             NormalizedUserName = "МАНСУР",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJOgntNisa6noQ5FEsejcr3zBW22KMZ0mOZ4x/TNwsVnwAn4sk7T7lLYd3isj9c/YA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI1SKtrhlJ1UqNQ3LD9Cp+v374e9a2q+jsGqi/u4WztHCJljN8l+YziFii9xqgrb3Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -564,7 +564,7 @@ namespace Main.Infrastructure.Migrations
                             LockoutEnabled = true,
                             NormalizedEmail = "DAMIR@EMA.IL",
                             NormalizedUserName = "ДАМИР",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMUnq4egla3ZebXoZuhCspPa9LcCpb1bGbhV2U08JfE8j55/31Isyu0xvBxQnZ+rKw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMQyJ7kVmYarRgp1u0HlGJEXsWd2tlW/clD8VOoKEyebulIhuovQZqwBNMfL1vVb/w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "18D6AB4E-F06A-4458-B24F-33DCC663BAC9",
                             TwoFactorEnabled = false,
@@ -963,6 +963,12 @@ namespace Main.Infrastructure.Migrations
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
 
+                            b1.Property<DateTime>("OperationTime")
+                                .HasColumnType("timestamp without time zone");
+
+                            b1.Property<decimal>("Sum")
+                                .HasColumnType("numeric");
+
                             b1.HasKey("OrderId");
 
                             b1.ToTable("Orders");
@@ -973,11 +979,15 @@ namespace Main.Infrastructure.Migrations
                             b1.HasData(
                                 new
                                 {
-                                    OrderId = new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14")
+                                    OrderId = new Guid("f1bc39f8-0434-4c23-ab66-0db72ac81b14"),
+                                    OperationTime = new DateTime(2023, 5, 12, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    Sum = 8600m
                                 },
                                 new
                                 {
-                                    OrderId = new Guid("964d25df-c2ac-4511-b43f-6588394afd52")
+                                    OrderId = new Guid("964d25df-c2ac-4511-b43f-6588394afd52"),
+                                    OperationTime = new DateTime(2023, 5, 12, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    Sum = 1000000m
                                 });
                         });
 
