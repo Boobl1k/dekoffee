@@ -1,14 +1,13 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS dev
 WORKDIR /app
 
-COPY ["src/Services/Main/Main.Web/Main.Web.csproj", "Main.Web/"]
-COPY ["src/Services/Main/Main.Application/Main.Application.csproj", "Main.Application/"]
-COPY ["src/Services/Main/Main.Infrastructure/Main.Infrastructure.csproj", "Main.Infrastructure/"]
-COPY ["src/Services/Main/Main.Tools/Main.Tools.csproj", "Main.Tools/"]
+COPY ["Main.Web/Main.Web.csproj", "Main.Web/"]
+COPY ["Main.Application/Main.Application.csproj", "Main.Application/"]
+COPY ["Main.Infrastructure/Main.Infrastructure.csproj", "Main.Infrastructure/"]
+COPY ["Main.Tools/Main.Tools.csproj", "Main.Tools/"]
 RUN dotnet restore "Main.Web/Main.Web.csproj"
 
-COPY ["src/Services/Main/", "/"]
-COPY ["src/Dekoffee.sln", "/"]
+COPY . .
 
 WORKDIR "/app/Main.Web"
 
