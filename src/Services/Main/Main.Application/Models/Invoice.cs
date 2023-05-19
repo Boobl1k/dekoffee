@@ -2,8 +2,8 @@
 
 public class Invoice
 {
-    public decimal Sum { get; }
-    public DateTime OperationTime { get; }
+    public decimal Sum { get; private init; }
+    public DateTime OperationTime { get; private init; }
 
     // ReSharper disable once UnusedMember.Local
     private Invoice()

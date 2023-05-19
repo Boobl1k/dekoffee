@@ -3,6 +3,7 @@ using System;
 using Main.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Main.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230518174157_InvoicesFix")]
+    partial class InvoicesFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,10 +229,6 @@ namespace Main.Infrastructure.Migrations
                     b.Property<double>("Gross")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("boolean");
 
@@ -255,7 +254,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Самый популярный вид кофе в Европе, готовится в кофемашине, требует специального, очень ровного помола. Готовят из смеси арабики и робусты, часто из специально собранных купажей. Для хорошо приготовленного кофе характерна плотная, устойчивая пенка светло-кремового цвета. Пьют после еды, в несколько глотков, так, чтобы кофе не успел остыть. Пенку перемешивают с жидкостью, для придания равномерного вкуса всему напитку. Стандартный объем порции – 35 грамм.",
                             EnergyValue = 9.0,
                             Gross = 45.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 35.0,
                             Price = 1000m,
@@ -268,7 +266,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Двойной эспрессо. Пьют горячим, иногда с тростниковым сахаром.",
                             EnergyValue = 9.0,
                             Gross = 80.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 70.0,
                             Price = 1700m,
@@ -281,7 +278,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Эспрессо, в который добавлена порция хорошо взбитых сливок. Сверху они посыпаются ароматными специями и шоколадом. Подают в чашках среднего или большого объема. Пьют в любое время дня и ночи, обычно с десертами или выпечкой. В процессе употребления такой кофе не принято перемешивать.",
                             EnergyValue = 6.0,
                             Gross = 110.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 100.0,
                             Price = 2200m,
@@ -294,7 +290,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Эспрессо по-римски. Готовят, как обычный эспрессо, подают с долькой лимона или длинной закрученной полоской лимонной цедры. Пьют после еды, без десертов и сладостей.",
                             EnergyValue = 7.5,
                             Gross = 90.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 80.0,
                             Price = 2000m,
@@ -307,7 +302,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Имеет очень маленький объем и низкое содержание кофеина. Для приготовления берется 5-7 грамм кофе на 25 грамм воды. Очень распространен в Италии, у нас популярность напитка гораздо ниже. Подают ристретто после обеда или ужина, без сахара, с бокалом холодной воды. Сначала делают несколько глотков воды, затем быстро выпивают ристретто. Вода нужна, чтобы очистить вкусовые рецепторы после приема пищи, и предотвратить обезвоживание после крепкого кофе.",
                             EnergyValue = 4.0,
                             Gross = 40.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 30.0,
                             Price = 700m,
@@ -320,7 +314,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Переходный вариант между эспрессо и американо. Можно сказать, американо по-итальянски. Объем эспрессо увеличивается в два раза за счет воды. Пьют после еды. Обычно такой рецепт выбирают те, кто хочет снизить порцию кофеина, но не готов отказаться от него совсем.",
                             EnergyValue = 4.0,
                             Gross = 50.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 40.0,
                             Price = 800m,
@@ -333,7 +326,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Эспрессо, разбавленный водой. После приготовления основной порции в 30 мл, бариста прогоняет дополнительно еще 90-120 грамм воды, увеличивая объем без повышения крепости напитка. Пьют после еды или в перерывах между ней, с добавлением сахара, молока, сливок. Американо зачастую сопровождается десертами или печеньем.",
                             EnergyValue = 9.5,
                             Gross = 140.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 130.0,
                             Price = 3300m,
@@ -346,7 +338,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "В переводе с итальянского означает «пятнистый». Название получил за внешний вид. Это обычный эспрессо, на который сверху кладется ложка молочной пены. Пьют после приема пищи, не смешивая пену и кофе.",
                             EnergyValue = 19.0,
                             Gross = 110.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 100.0,
                             Price = 2900m,
@@ -359,7 +350,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Кофе с молоком, которое взбито в пышную пену, с нежной структурой. Сверху добавляет тертый шоколад, какао, корицу или сахарную пудру. Пьют капучино в перерывах между едой, в Италии – на родине рецепта, его употребляют лишь в первой половине дня, до 16 часов. Обычная порция – 150 грамм, оптимальная температура употребления – 60 градусов. Капучино часто сопровождают небольшими порциями десертов, печеньем, шоколадом.",
                             EnergyValue = 90.0,
                             Gross = 160.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 150.0,
                             Price = 3100m,
@@ -372,7 +362,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Готовят из одной части эспрессо и двух частей молока со взбитой пеной. Дополняют вкус разнообразными сиропами, из которых самые популярные – карамельный, шоколадный и клубничный. Употребляют в любое время, как коктейль, подают в высоких бокалах с соломинками",
                             EnergyValue = 200.0,
                             Gross = 160.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 150.0,
                             Price = 3000m,
@@ -385,7 +374,6 @@ namespace Main.Infrastructure.Migrations
                             Description = "Напиток, в котором эспрессо, молоко и пена из взбитых сливок или молока лежат слоями. Употребляют в перерывах между едой. Подают напиток в высоком бокале, пьют, не перемешивая слои, используя соломинку.",
                             EnergyValue = 29.0,
                             Gross = 160.0,
-                            ImageUrl = "https://i.imgur.com/fE10Rf0.jpg",
                             IsBlocked = false,
                             Net = 150.0,
                             Price = 3150m,
