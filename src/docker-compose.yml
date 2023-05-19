@@ -1,10 +1,10 @@
 services:
   api:
     build:
-      context: .
-      dockerfile: /src/Services/Main/Main.Web/DockerfileDev
+      context: ./Services/Main/
+      dockerfile: Main.Web/DockerfileDev
     ports:
-      - 5000:5000
+      - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
@@ -14,23 +14,23 @@ services:
       - "/app/Main.Application/obj"
       - "/app/Main.Infrastructure/bin"
       - "/app/Main.Infrastructure/obj"
-      - './src/Services/Main/Main.Web/:/app/Main.Web'
-      - './src/Services/Main/Main.Application/:/app/Main.Application'
-      - './src/Services/Main/Main.Infrastructure/:/app/Main.Infrastructure'
-      - './src/Services/Main/Main.Tools/:/app/Main.Tools'
+      - './Services/Main/Main.Web/:/app/Main.Web'
+      - './Services/Main/Main.Application/:/app/Main.Application'
+      - './Services/Main/Main.Infrastructure/:/app/Main.Infrastructure'
+      - './Services/Main/Main.Tools/:/app/Main.Tools'
     depends_on:
       - postgres
 
   front:
     build:
-      context: ./src/Web/react-app/
+      context: ./Web/react-app/
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       - PORT=3000
       - WATCHPACK_POLLING=true
     volumes:
-      - ./src/Web/react-app:/app
+      - ./Web/react-app:/app
       - "/app/node_modules"
     depends_on:
       - api
@@ -43,4 +43,6 @@ services:
       POSTGRES_PASSWORD: "pass"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
-      - 5432:5432
+      - "5432:5432"
+
+name: dekoffee
