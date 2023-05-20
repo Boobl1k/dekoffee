@@ -5,6 +5,7 @@ using Main.Dto;
 using Main.Dto.Order;
 using Main.Dto.Product;
 using Main.Dto.User;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
@@ -16,13 +17,15 @@ public class AdminController : CustomControllerBase
     private readonly IProductService<Product> _productService;
     private readonly IUserService<User> _userService;
     private readonly IOrderService _orderService;
+    private readonly UserManager<User> _userManager;
 
     public AdminController(IProductService<Product> productService, IUserService<User> userService,
-        IOrderService orderService)
+        IOrderService orderService, UserManager<User> userManager)
     {
         _productService = productService;
         _userService = userService;
         _orderService = orderService;
+        _userManager = userManager;
     }
 
     #region Users
@@ -148,7 +151,7 @@ public class AdminController : CustomControllerBase
     #region Orders
 
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(List<DisplayOrderDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<DisplayOrderDto>))]
     [HttpGet("orders")]
     public async Task<IActionResult> GetOrders()
     {
@@ -164,7 +167,7 @@ public class AdminController : CustomControllerBase
 
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DisplayOrderDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DisplayOrderDto))]
     [HttpGet("orders/{id:guid}")]
     public async Task<IActionResult> GetOrder([FromRoute] Guid id)
     {
@@ -184,7 +187,7 @@ public class AdminController : CustomControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [HttpPatch("orders/{id:guid}")]
+    [HttpPatch("orders/{id:guid}/change-status")]
     public async Task<IActionResult> ChangeOrderStatus([FromRoute] Guid id, [FromBody] UpdateOrderStatusDto orderDto)
     {
         if (!ModelState.IsValid) return BadRequest();
@@ -203,6 +206,42 @@ public class AdminController : CustomControllerBase
             return BadRequest($"Next order status can be: {string.Join(", ", possibleStatuses)}");
 
         await _orderService.ChangeOrderStatus(order, nextStatus);
+        return NoContent();
+    }
+
+    [HttpPatch("orders/{orderId:guid}/set-executor/{executorId:guid}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> SetExecutor([FromRoute] Guid orderId, [FromRoute] Guid executorId)
+    {
+        if (await _orderService.CreateOrderBuilder()
+                .WithUser()
+                .GetOrder(orderId) is not { } order)
+            return NotFound("Order not found");
+
+        var user = await _userService.CreateUserBuilder().FindById(executorId);
+        if (user is null)
+            return NotFound("User not found");
+        if (!await _userManager.IsInRoleAsync(user, UserRoles.Executor))
+            return BadRequest($"User should be in `{UserRoles.Executor}` role");
+        order.Executor = user;
+        await _orderService.UpdateOrder(order);
+        return NoContent();
+    }
+    
+    [HttpPatch("orders/{orderId:guid}/remove-executor")]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ModelStateDto))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> RemoveExecutor([FromRoute] Guid orderId)
+    {
+        if (await _orderService.CreateOrderBuilder()
+                .WithUser()
+                .GetOrder(orderId) is not { } order)
+            return NotFound("Order not found");
+
+        order.Executor = null;
+        await _orderService.UpdateOrder(order);
         return NoContent();
     }
 
