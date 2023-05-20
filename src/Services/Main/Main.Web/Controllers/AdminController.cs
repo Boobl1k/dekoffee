@@ -6,12 +6,14 @@ using Main.Dto.Order;
 using Main.Dto.Product;
 using Main.Dto.User;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Main.Controllers;
 
 [ApiController]
 [Route("[controller]"), OpenIdDictAuthorize]
+[AllowAnonymous]
 public class AdminController : CustomControllerBase
 {
     private readonly IProductService<Product> _productService;
@@ -81,7 +83,16 @@ public class AdminController : CustomControllerBase
     #endregion
 
     #region Products
-
+    
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DisplayProductDto>))]
+    [HttpGet("products")]
+    public async Task<IActionResult> GetProducts()
+    {
+        var products = await _productService.GetProducts();
+        return Ok(products);
+    }
+    
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ModelStateDto))]
