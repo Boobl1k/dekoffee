@@ -1,0 +1,13 @@
+.authContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authInnerContainer {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}

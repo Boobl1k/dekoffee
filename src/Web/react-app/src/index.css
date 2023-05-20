@@ -5,9 +5,92 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #FFF8EA;
+  font-family: 'Helvetica';
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  color: inherit;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  height: 100vh;
+}
+
+header {
+  height: 150px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+  height: 100px;
+  background-color: #9E7676;
+}
+
+footer {
+  height: 100px;
+  background-color: #9E7676;
+  display: flex;
+  align-items: center;
+}
+
+.page {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+
+button:active {
+  box-shadow: inset 0 0 10px #00000021;
+}
+
+button:hover {
+  background: #b99393;
+}
+
+button {
+  outline: none;
+  padding: 10px 20px;
+  background: #ca9898;
+  border: none;
+  font-size: 21px;
+  border-radius: 10px;
+}
+
+input {
+  font-size: 21px;
+  border-radius: 10px;
+  padding: 5px;
+  outline: none;
+  border: none;
+}
+
+.baseContainer {
+  background-color: #9E7676;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+}
+
+.titleSpan {
+  font-family: 'Coffee';
+  font-size: 45px;
+  width: 95%;
 }

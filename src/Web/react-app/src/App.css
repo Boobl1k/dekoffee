@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Coffee';
+  src: url('coffeeservice.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
 .App {
   text-align: center;
 }

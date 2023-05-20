@@ -1,0 +1,12 @@
+.logo {
+    font-family: 'Coffee';
+    position: absolute;
+    font-size: 45px;
+    font-weight: 400;
+    color: #352828;
+}
+
+.profile {
+    position: absolute;
+    right: 10%;;
+}
