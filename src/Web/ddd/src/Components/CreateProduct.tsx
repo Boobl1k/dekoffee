@@ -8,6 +8,7 @@ const productData: IProduct ={
     id: 'dqwdd' as unknown as Guid,
     title: '',
     price: 0.0,
+    imageUrl: '',
     description: '',
     net: 0.0,
     country: '',
@@ -28,6 +29,7 @@ export function CreateProduct({onCreate}:CreateProductProps){
     const [gross,setGross]=useState(0)
     const [counrty,setCountry]=useState('')
     const [energyValue,setEnergyValue]=useState(0)
+    const [imageUrl,setImageUrl]=useState('')
     const [error,setError]=useState('')
 
 
@@ -47,6 +49,10 @@ export function CreateProduct({onCreate}:CreateProductProps){
             setError('Please enter valid data')
             return
         }
+        if (imageUrl.trim().length==0){
+            setError('Please enter valid data')
+            return
+        }
 
     
         productData.title=title
@@ -57,6 +63,7 @@ export function CreateProduct({onCreate}:CreateProductProps){
         productData.gross=gross
         productData.isBlocked=false
         productData.net=net
+        productData.imageUrl=imageUrl
 
         console.log(productData)
         const response =await axios.post<IProduct>('http://localhost:5000/admin/products',productData)
@@ -71,10 +78,11 @@ export function CreateProduct({onCreate}:CreateProductProps){
             <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product title..." value={title} onChange={event=>setTitle(event.target.value)} />
             <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product price" value={price} onChange={event=>setPrice(Number(event.target.value))} />
             <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product desc" value={description} onChange={event=>setDescription(event.target.value)} />
-            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product image" value={net} onChange={event=>setNet(Number(event.target.value))} />
-            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product image" value={gross} onChange={event=>setGross(Number(event.target.value))} />
-            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product category" value={counrty} onChange={event=>setCountry(event.target.value)} />
-            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product category" value={energyValue} onChange={event=>setEnergyValue(Number(event.target.value))} />
+            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product image" value={imageUrl} onChange={event=>setImageUrl(event.target.value)} />
+            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product net" value={net} onChange={event=>setNet(Number(event.target.value))} />
+            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product gross" value={gross} onChange={event=>setGross(Number(event.target.value))} />
+            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product country" value={counrty} onChange={event=>setCountry(event.target.value)} />
+            <input type="text" className="border py-2 px-4 mb-2 w-full outline-0" placeholder="Enter product energyValue" value={energyValue} onChange={event=>setEnergyValue(Number(event.target.value))} />
             <input type="hidden" name="isBlocked" value="false"></input>
             {error &&<ErrorMessage error={error}/>}
             <button className="py-2 px-4 border bg-yellow-400 hover:text-white">Create</button>

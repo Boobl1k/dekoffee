@@ -18,6 +18,8 @@ export function Product({product}: ProductProps){
         <div className="border py-2 px-4 rounded flex flex-col items-center mb-2">
             <p>{product.title}</p>
             <p className="font-bold">{product.price}Р</p>
+            <img src={product.imageUrl} className="w-1/6" alt={product.title}/>
+            <br/>
             <div className="flex justify-between">
             <button className={btnClasses.join(' ')} onClick={()=> setDetails(prev=>!prev)}>
                 {details ? 'Hide Details' : "Show Details"}

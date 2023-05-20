@@ -11,7 +11,7 @@ import { useUsers } from '../hooks/users';
 import { IUser } from '../models';
 
 export function UsersPage(){
-    const{loading,error,users,addProduct}=useUsers()
+    const{loading,error,users,addUser}=useUsers()
   
 
 

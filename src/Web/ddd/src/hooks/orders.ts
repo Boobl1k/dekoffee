@@ -1,14 +1,14 @@
 import {useEffect,useState} from 'react'
-import { IUser } from '../models'
+import { IOrder } from '../models'
 import axios from 'axios'
 
-export function useUsers() {
-    async function fetchUsers() {
+export function useOrders() {
+    async function fetchOrders() {
         try{
           setError('')
           setLoading(true)
-          const response=await axios.get<IUser[]>('http://localhost:5000/admin/users')
-          setUser(response.data)
+          const response=await axios.get<IOrder[]>('http://localhost:5000/admin/orders')
+          setOrders(response.data)
           setLoading(false)
         }
         catch(e: unknown){
@@ -18,17 +18,17 @@ export function useUsers() {
         }
       }
       
-      function addUser(user:IUser){
-        setUser(prev=>[...prev,user])
+      function addOrder(order:IOrder){
+        setOrders(prev=>[...prev,order])
       }
 
       useEffect(()=>{
-        fetchUsers()
+        fetchOrders()
       },[])
     
-      const [users,setUser]=useState<IUser[]>([])
+      const [orders,setOrders]=useState<IOrder[]>([])
       const [loading,setLoading] =useState(false)
       const [error,setError]=useState('')
 
-      return{users,error,loading,addUser}
+      return{orders,error,loading,addOrder}
 }

@@ -3,6 +3,7 @@ import {Guid} from "guid-typescript"
 export interface IProduct{
     id: Guid
     title: string
+    imageUrl:string
     price: number
     description?: string
     net: number
@@ -18,4 +19,14 @@ export interface IUser{
     userName: string
     isDeleted: boolean
     isBlocked:boolean
+}
+
+export interface IOrder{
+    id: Guid
+    fullAddress: string
+    executorName:string
+    creationTime: Date 
+    totalSum: number
+    status: string
+    products : IProduct[]
 }
