@@ -19,7 +19,10 @@ services.AddAuthorization();
 
 builder.AddCustomApplicationServices();
 
-services.AddCors();
+services.AddCors(options =>
+    options.AddPolicy("AllowSpecific", p => p.WithOrigins("http://localhost:3000")
+        .AllowAnyMethod()
+        .AllowAnyHeader()));
 
 var app = builder.Build();
 
