@@ -59,6 +59,12 @@ public class UserService : IUserService<User>, IUserBuilder<User>
     public async Task<List<User>> GetUsers() =>
         await _query.ToListAsync();
 
+    public IUserBuilder<User> WithCartProducts()
+    {
+        _query.Include(u => u.Cart.Products).ThenInclude(p => p.Product);
+        return this;
+    }
+
     public async Task<User?> FindByEmail(string email) =>
         await _query.FirstOrDefaultAsync(u => u.Email == email);
 

@@ -60,13 +60,15 @@ public class CartController : CustomControllerBase
 
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ModelStateDto))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [HttpDelete("{productIndex:int}")]
-    public async Task<IActionResult> RemoveProductFromCart([FromRoute] int productIndex)
+    [HttpDelete("{productId:guid}")]
+    public async Task<IActionResult> RemoveProductFromCart([FromRoute] Guid productId)
     {
-        if (await _userService.CreateUserBuilder().GetCurrentUser() is not { } user)
+        if (await _userService.CreateUserBuilder().WithCartProducts().GetCurrentUser() is not { } user)
             return UnauthorizedClient();
 
-        await _cartService.RemoveProductFromCart(user.Id, productIndex);
+        if (user.Cart.Products.Any(p => p.Product.Id == productId))
+            return NotFound("This product not found in users cart");
+        await _cartService.RemoveProductFromCart(user.Id, productId);
         return NoContent();
     }
 

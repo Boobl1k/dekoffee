@@ -38,13 +38,12 @@ public class CartService : ICartService, ICartBuilder
         return lastItem == null || lastItem != product ? null : lastItem;
     }
 
-    public async Task RemoveProductFromCart(Guid id, int index)
+    public async Task RemoveProductFromCart(Guid id, Guid productId)
     {
         var user = await CreateCartBuilder().WithProducts().GetUserWithCart(id) ?? throw new Exception("Not logged in");
-        if (user.Cart.Products.Count <= index)
-            throw new ArgumentOutOfRangeException();
 
-        user.Cart.Products.RemoveAt(index);
+        var product = user.Cart.Products.First(p => p.Product.Id == productId);
+        user.Cart.Products.Remove(product);
         await _unitOfWork.SaveChangesAsync();
     }
 

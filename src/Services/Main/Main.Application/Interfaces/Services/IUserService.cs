@@ -13,6 +13,7 @@ public interface IUserBuilder<TEntity> where TEntity : class
 {
     IUserBuilder<TEntity> WithAddresses();
     Task<List<TEntity>> GetUsers();
+    IUserBuilder<TEntity> WithCartProducts();
     Task<TEntity?> FindByEmail(string email);
     Task<TEntity?> FindById(Guid id);
     Task<TEntity?> GetCurrentUser();
