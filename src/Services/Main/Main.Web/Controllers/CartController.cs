@@ -66,7 +66,8 @@ public class CartController : CustomControllerBase
         if (await _userService.CreateUserBuilder().WithCartProducts().GetCurrentUser() is not { } user)
             return UnauthorizedClient();
 
-        if (user.Cart.Products.Any(p => p.Product.Id == productId))
+        var _ = user.Cart.Products;
+        if (user.Cart.Products.All(p => p.Product.Id != productId))
             return NotFound("This product not found in users cart");
         await _cartService.RemoveProductFromCart(user.Id, productId);
         return NoContent();

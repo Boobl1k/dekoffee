@@ -61,7 +61,7 @@ public class UserService : IUserService<User>, IUserBuilder<User>
 
     public IUserBuilder<User> WithCartProducts()
     {
-        _query.Include(u => u.Cart.Products).ThenInclude(p => p.Product);
+        _query = _query.Include(u => u.Cart.Products).ThenInclude(p => p.Product);
         return this;
     }
 

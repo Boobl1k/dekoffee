@@ -21,20 +21,6 @@ services:
     depends_on:
       - postgres
 
-  front:
-    build:
-      context: ./Web/react-app/
-    ports:
-      - "3000:3000"
-    environment:
-      - PORT=3000
-      - WATCHPACK_POLLING=true
-    volumes:
-      - ./Web/react-app:/app
-      - "/app/node_modules"
-    depends_on:
-      - api
-
   postgres:
     image: postgres:14.5
     environment:
